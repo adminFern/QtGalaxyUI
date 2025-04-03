@@ -163,13 +163,14 @@ Item {
         displayMarginEnd: Math.min(200, root.model.length * d.itemHeight / 3)
 
         delegate: Rectangle {
+           id: delegateItem
           width: listView.width
           height: d.itemHeight
-          radius: d.radius
+           property bool isCurrentItem: root.currentIndex === index  // 明确当前选中状态
           color: {
             // 优先级：按压 > 悬停 > 选中 > 默认
             if (root.pressedIndex === index) return "crimson"
-            else if (hoverArea.containsMouse) return "darkgray" // 新增悬停状态
+            else if (hoverArea.containsMouse && !isCurrentItem) return "darkgray" // 新增悬停状态
             else if (root.currentIndex === index) return "darkmagenta"
             else return "transparent";
           }
@@ -186,19 +187,17 @@ Item {
           }
 
           MouseArea {
-
             id: hoverArea
-
             anchors.fill: parent
             hoverEnabled: true
             onPressed: {
-              // 在按压时立即更新状态
-              root.lastHighlightedIndex = root.currentIndex // 保存上一次选中的索引
-              root.currentIndex = index // 更新当前选中的索引
-              root.pressedIndex = index // 设置按压状态
-              root.activated(index) // 触发信号
-
-            }
+                       if (!isCurrentItem) {  // 选中项不重复触发
+                           root.lastHighlightedIndex = root.currentIndex;
+                           root.currentIndex = index;
+                           root.pressedIndex = index;
+                           root.activated(index);
+                       }
+                   }
             onReleased: {
               root.pressedIndex = -1 // 清除按压状态
               popup.close() // 关闭弹出框
