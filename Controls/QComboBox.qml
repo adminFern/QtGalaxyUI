@@ -314,9 +314,6 @@ Item {
           }
         }
 
-
-
-
       }//ListView
     }//Item
     function toggle() {
