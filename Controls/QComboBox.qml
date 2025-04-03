@@ -98,8 +98,6 @@ Item {
   }
 
 
-
-
   Popup {
     id: popup
     y: comboBox.height + 2
@@ -113,8 +111,8 @@ Item {
         id: bg
         anchors.fill: parent
         radius: d.radius
-        color: "#F5F5F5"
-        opacity: 0.95
+        color: Qt.rgba(1,1,1,0.8)
+        opacity: 0.9
         border.color: "#BDBDBD"
         border.width: 1
       }
@@ -166,7 +164,7 @@ Item {
             id: hoverArea
             anchors.fill: parent
             hoverEnabled: true
-            cursorShape: containsMouse ? Qt.PointingHandCursor : Qt.ArrowCursor
+            cursorShape: pressed ? Qt.PointingHandCursor : Qt.ArrowCursorr
 
             onPressed: if (!isCurrent) {
                          root.currentIndex = index
@@ -182,44 +180,54 @@ Item {
           }
         }
 
+        //滚动条
         Rectangle {
-            id: scrollBar
-            visible: d.showScrollBar
-            width: 12
-            height: listView.height
-            anchors.right: listView.right
-            color: Qt.rgba(0.8, 0.8, 0.8, 0.2)
-            radius: width / 2
+          id: scrollBar
+          visible: d.showScrollBar
+          width: 6
+          height: listView.height
+          anchors.right: listView.right
+          color: "transparent"
+          property real sizeRatio: listView.visibleArea.heightRatio
 
-            property real position: listView.visibleArea.yPosition
-            property real sizeRatio: listView.visibleArea.heightRatio
-
-            Rectangle {
-                id: handle
-                width: parent.width - 4
-                height: Math.max(30, listView.height * scrollBar.sizeRatio)
-                x: 2
-                y: (scrollBar.height - height) * scrollBar.position
-                radius: width / 2
-                color: handleArea.pressed ? Qt.rgba(0.6, 0.6, 0.6, 0.9) :
-                       handleArea.containsMouse ? Qt.rgba(0.6, 0.6, 0.6, 0.7) : Qt.rgba(0.6, 0.6, 0.6, 0.5)
-
-                MouseArea {
-                    id: handleArea
-                    anchors.fill: parent
-                    drag.target: parent
-                    drag.axis: Drag.YAxis
-                    drag.minimumY: 0
-                    drag.maximumY: scrollBar.height - handle.height
-                    hoverEnabled: true
-
-                    onPositionChanged: {
-                        if (pressed) {
-                            listView.contentY = (handle.y / (scrollBar.height - handle.height)) * (listView.contentHeight - listView.height)
-                        }
-                    }
-                }
+          Rectangle {
+            id: handle
+            width: (handleArea.containsMouse || handleArea.pressed) ? 6 : 3
+            height: Math.max(30, listView.height * scrollBar.sizeRatio)
+            x: (handleArea.containsMouse || handleArea.pressed) ? 0 : 3
+            y: {
+              if (handleArea.pressed) return y
+              var contentHeight = listView.contentHeight - listView.height
+              if (contentHeight <= 0) return 0
+              return (scrollBar.height - height) * (listView.contentY / contentHeight)
             }
+            radius: width / 2
+            color: handleArea.pressed ? Qt.rgba(0.6, 0.6, 0.6, 0.9) :
+                                        handleArea.containsMouse ? Qt.rgba(0.6, 0.6, 0.6, 0.7) : Qt.rgba(0.6, 0.6, 0.6, 0.5)
+
+
+
+            MouseArea {
+              id: handleArea
+              anchors.fill: parent
+              drag.target: parent
+              drag.axis: Drag.YAxis
+              drag.minimumY: 0
+              drag.maximumY: scrollBar.height - handle.height
+              hoverEnabled: true
+              cursorShape: containsMouse ? Qt.PointingHandCursor : Qt.ArrowCursor  // 添加这行
+
+
+
+              onPositionChanged: {
+                if (pressed) {
+                  var contentHeight = listView.contentHeight - listView.height
+                  var ratio = handle.y / (scrollBar.height - handle.height)
+                  listView.contentY = ratio * contentHeight
+                }
+              }
+            }
+          }
         }
 
 
@@ -238,3 +246,5 @@ Item {
     }
   }
 }
+
+

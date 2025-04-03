@@ -5,7 +5,7 @@ Window {
     height: 480
     visible: true
     title: qsTr("Hello ccc")
-    property int name: 10000
+    property int name: 30
     Row{
         padding: 5
         spacing: 6
