@@ -165,11 +165,16 @@ Item {
         delegate: Rectangle {
           width: listView.width
           height: d.itemHeight
+          radius: d.radius
           color: {
-            if (root.pressedIndex === index) return "#0078D7"
-            else if (root.currentIndex === index) return "#0078D7"//释放的颜色
-            else return "transparent"
+            // 优先级：按压 > 悬停 > 选中 > 默认
+            if (root.pressedIndex === index) return "crimson"
+            else if (hoverArea.containsMouse) return "darkgray" // 新增悬停状态
+            else if (root.currentIndex === index) return "darkmagenta"
+            else return "transparent";
           }
+
+
           Text {
             anchors.verticalCenter: parent.verticalCenter
             x: 8
@@ -181,6 +186,9 @@ Item {
           }
 
           MouseArea {
+
+            id: hoverArea
+
             anchors.fill: parent
             hoverEnabled: true
             onPressed: {
@@ -189,6 +197,7 @@ Item {
               root.currentIndex = index // 更新当前选中的索引
               root.pressedIndex = index // 设置按压状态
               root.activated(index) // 触发信号
+
             }
             onReleased: {
               root.pressedIndex = -1 // 清除按压状态
