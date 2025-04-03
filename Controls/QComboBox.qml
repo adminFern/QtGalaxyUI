@@ -39,16 +39,59 @@ Item {
     color: d.semiTransparentBg
     border.color: mainMouseArea.containsMouse ? d.borderHover : d.borderNormal
 
+
+
+
+    Loader {
+      id: comboIconLoader
+      anchors {
+        left: parent.left
+        leftMargin: 8
+        verticalCenter: parent.verticalCenter
+      }
+      width: 16
+      height: 16
+      active: {
+        if (root.currentIndex < 0) return false;
+        var item = model[root.currentIndex];
+        return item && typeof item === 'object' && item.icon !== undefined;
+      }
+      sourceComponent: QIcon {
+        icosource: {
+          if (root.currentIndex < 0) return "";
+          var item = model[root.currentIndex];
+          return item.icon || "";
+        }
+        iconSize: Math.min(comboIconLoader.width, comboIconLoader.height)
+      }
+    }
+
+
+
+
     Text {
       id: displayText
       anchors.verticalCenter: parent.verticalCenter
-      anchors.left: parent.left
+      anchors.left: comboIconLoader.right
       anchors.leftMargin: 5
       width: comboBox.width - indicatorRec.width - 8
-      text: root.currentIndex >= 0 ? model[root.currentIndex] : "请选择"
+      text: {
+        if (root.currentIndex < 0) return "请选择";
+
+        var item = model[root.currentIndex];
+        // 处理三种情况：
+        // 1. 纯字符串数组
+        // 2. 带text属性的对象 {text: "..."}
+        // 3. 带text和icon属性的对象 {text: "...", icon: "..."}
+        if (typeof item === "string") {
+          return item;
+        } else if (item && item.text !== undefined) {
+          return item.text;
+        }
+        return String(item); // 最后保障
+      }
       elide: Text.ElideRight
     }
-
     Rectangle {
       id: indicatorRec
       radius: d.radius
@@ -147,15 +190,56 @@ Item {
 
           color: {
             if (root.pressedIndex === index) return "crimson"
-            else if (hoverArea.containsMouse && !isCurrent) return "darkgray"
+            else if (hoverArea.containsMouse && !isCurrent) return "deeppink"
             else if (isCurrent) return "darkmagenta"
             else return "transparent"
           }
+
+
+          // 添加 Loader 动态加载 QIcon
+          Loader {
+            id: iconLoader
+            anchors {
+              left: parent.left
+              leftMargin: 8
+              verticalCenter: parent.verticalCenter
+            }
+            width: 16  // 固定图标宽度
+            height: 16 // 固定图标高度
+            active: modelData.icon !== undefined // 仅当 model 有 icon 字段时加载
+            sourceComponent: QIcon {
+              icosource: modelData.icon || "" // 从 model 中读取图标类型
+              iconSize: Math.min(iconLoader.width, iconLoader.height)
+            }
+          }
+
+
+
+          // 添加颜色变化的动画效果
+          Behavior on color {
+            ColorAnimation {
+              duration: 300
+              easing.type: Easing.OutQuad
+            }
+          }
+
+
+
+
           Text {
             anchors.verticalCenter: parent.verticalCenter
-            x: 8
+            anchors.left: iconLoader.right
             width: parent.width - 16
-            text: modelData
+            Text {
+              text: {
+                if (typeof modelData === "string") {
+                  return modelData; // 兼容纯字符串数组
+                } else if (modelData.text !== undefined) {
+                  return modelData.text; // 兼容对象数组
+                }
+                return "";
+              }
+            }
             color: (root.pressedIndex === index || isCurrent) ? "white" : "black"
             elide: Text.ElideRight
           }
