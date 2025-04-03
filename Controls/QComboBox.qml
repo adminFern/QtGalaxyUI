@@ -160,17 +160,19 @@ Item {
                 delegate: Rectangle {
                     width: listView.width
                     height: d.itemHeight
-
-                    // 背景色逻辑：选中 > 悬停 > 默认
-                    color: {
-                        if (listView.currentIndex === index) {
-                            return "#0078D7"  // 选中状态（蓝色）
-                        } else if (mouseArea.containsMouse) {
-                            return Qt.rgba(0, 0, 0, 0.05)  // 悬停状态（浅灰色）
-                        } else {
-                            return "transparent"  // 默认状态
+                    // 背景色逻辑：选中 > 按压 > 悬停 > 默认
+                        color: {
+                            if (listView.currentIndex === index) {
+                                return "#0078D7"                     // 1. 选中状态（蓝色）
+                            } else if (mouseArea.pressed) {
+                                return "#0078D7"                     // 2. 按压状态（蓝色）
+                            } else if (mouseArea.containsMouse) {
+                                return Qt.rgba(0, 0, 0, 0.05)       // 3. 悬停状态（浅灰色）
+                            } else {
+                                return "transparent"                 // 4. 默认状态
+                            }
                         }
-                    }
+
 
                     Text {
                         anchors.verticalCenter: parent.verticalCenter
