@@ -121,9 +121,10 @@ Window {
     Row{
         padding: 5
         spacing: 6
-        QIcon{
-            icosource: FluentIcons.q_VPN
-        }
+        leftPadding: 5
+        // QIcon{
+        //     icosource: FluentIcons.q_VPN
+        // }
         QComboBox{
             id:bobox
             // model:regionModel//generateRandomData()

@@ -16,7 +16,7 @@ Item {
   QtObject {
     id: d
     property int itemHeight: 32
-    property int visibleItemCount: 5
+    property int visibleItemCount: 10
     property int radius: 4
     property int borderWidth: 1
     property int dropDownHeight: Math.min(visibleItemCount * itemHeight, model.count * itemHeight) + 6//修改
@@ -33,23 +33,11 @@ Item {
     // 判断当前选中项是否有图标
     // 方法2：直接检查（更简洁）
     function hasIcon() {
-        if (root.currentIndex < 0) return false
-        var item = model.get(root.currentIndex)
-        return item && item.icon  // 自动处理undefined/null/空字符串
+      if (root.currentIndex < 0) return false
+      var item = model.get(root.currentIndex)
+      return item && item.icon  // 自动处理undefined/null/空字符串
     }
 
-
-    // 图标组件定义
-    property Component comboIconComponent: Component {
-      QIcon {
-        icosource: {
-          if (root.currentIndex < 0) return ""
-          var item = model.get(root.currentIndex)
-          return item.icon || ""
-        }
-        iconSize: 16
-      }
-    }
   }
 
 
@@ -64,57 +52,32 @@ Item {
     color: d.semiTransparentBg
     border.color: mainMouseArea.containsMouse ? d.borderHover : d.borderNormal
 
-    // 左侧布局容器（固定宽度）
-    // 左侧布局容器（固定宽度）
 
-    // 图标加载器（仅在需要时显示）
-    // 1. 图标区域（固定位置）
-    // Loader {
-    //   id: iconLoader
-    //   anchors {
-    //     left: parent.left
-    //     leftMargin: 8
-    //     verticalCenter: parent.verticalCenter
-    //   }
-    //   width: 16
-    //   height: 16
-    //   active: {
-    //     if (root.currentIndex < 0) return false
-    //     return model.get(root.currentIndex).icon !== undefined
-    //   }
-    //   sourceComponent: Image {
-    //     source: model.get(root.currentIndex).icon || ""
-    //     fillMode: Image.PreserveAspectFit
-    //   }
-    // }
-    Loader {
-           id: comboIconLoader
-           anchors {
-             left: parent.left
-             leftMargin: 8
-             verticalCenter: parent.verticalCenter
-           }
-           width: 16
-           height: 16
-           active: {
-             if (root.currentIndex < 0) return false
-             var item = model.get(root.currentIndex)
-             return item && item.icon !== undefined
-           }
-           sourceComponent: active ? d.comboIconComponent : null
-         }
-    // 2. 文本区域（动态调整）
+    QIcon{
+      anchors.leftMargin: 3
+      anchors.verticalCenter: comboBox.verticalCenter
+      anchors.left: comboBox.left
+      id: comboIconLoader
+      iconSize: d.icosize
+      icosource: {
+        if (root.currentIndex < 0) return ""
+        var item = model.get(root.currentIndex)
+        return item.icon || ""
+      }
+      visible:root.model && root.currentIndex >= 0 && root.currentIndex < root.model.count ?
+                (root.model.get(root.currentIndex).icon !== undefined && root.model.get(root.currentIndex).icon !== "") : false
+
+    }
+    //文本
     Text {
       id: displayText
       anchors {
         left: d.hasIcon() ?comboIconLoader.right:parent.left
-
         leftMargin: 3
-        // right: indicatorRec.left
-        //  rightMargin: 4
-        verticalCenter: parent.verticalCenter
+        verticalCenter: comboBox.verticalCenter
       }
-      text: root.currentIndex < 0 ? "请选择" :model.get(root.currentIndex).text
+      text: root.model && root.currentIndex >= 0 && root.currentIndex < root.model.count ?
+              (root.model.get(root.currentIndex).text !== undefined ? root.model.get(root.currentIndex).text : "") : ""
       elide: Text.ElideRight
     }
 
@@ -229,8 +192,8 @@ Item {
               leftMargin: 8
               verticalCenter: parent.verticalCenter
             }
-            width: 16  // 固定图标宽度
-            height: 16 // 固定图标高度
+            width: d.itemHeight*0.6//16  // 固定图标宽度
+            height: d.itemHeight*0.6 // 固定图标高度
             active: model.icon !== undefined // 仅当 model 有 icon 字段时加载
             sourceComponent: QIcon {
               icosource: model.icon || ""
@@ -247,6 +210,8 @@ Item {
           }
 
           Text {
+
+            anchors.leftMargin: 3
             anchors.verticalCenter: parent.verticalCenter
             anchors.left: model.icon ? iconLoader.right : parent.left
             width: parent.width - 16
