@@ -9,7 +9,7 @@ Item {
   height: implicitHeight
 
   property int pressedIndex: -1
-  property var model: []
+  property ListModel model: ListModel {}  // 使用标准ListModel
   property int currentIndex: -1
   signal activated(int index)
 
@@ -19,8 +19,8 @@ Item {
     property int visibleItemCount: 5
     property int radius: 4
     property int borderWidth: 1
-    property int dropDownHeight: Math.min(visibleItemCount * itemHeight, model.length * itemHeight) + 6
-    property bool showScrollBar: model.length * itemHeight > dropDownHeight
+    property int dropDownHeight: Math.min(visibleItemCount * itemHeight, model.count * itemHeight) + 6//修改
+    property bool showScrollBar: model.count * itemHeight > dropDownHeight
 
     // 颜色定义
     property color semiTransparentBg: Qt.rgba(1,1,1,0.1)
@@ -53,13 +53,13 @@ Item {
       height: 16
       active: {
         if (root.currentIndex < 0) return false;
-        var item = model[root.currentIndex];
-        return item && typeof item === 'object' && item.icon !== undefined;
+        var item = model.get(root.currentIndex);
+        return item && item.icon !== undefined;
       }
       sourceComponent: QIcon {
         icosource: {
           if (root.currentIndex < 0) return "";
-          var item = model[root.currentIndex];
+          var item = model.get(root.currentIndex);
           return item.icon || "";
         }
         iconSize: Math.min(comboIconLoader.width, comboIconLoader.height)
@@ -77,18 +77,8 @@ Item {
       width: comboBox.width - indicatorRec.width - 8
       text: {
         if (root.currentIndex < 0) return "请选择";
-
-        var item = model[root.currentIndex];
-        // 处理三种情况：
-        // 1. 纯字符串数组
-        // 2. 带text属性的对象 {text: "..."}
-        // 3. 带text和icon属性的对象 {text: "...", icon: "..."}
-        if (typeof item === "string") {
-          return item;
-        } else if (item && item.text !== undefined) {
-          return item.text;
-        }
-        return String(item); // 最后保障
+        var item = model.get(root.currentIndex);
+        return item.text || String(item); // 优先使用text属性，否则转为字符串
       }
       elide: Text.ElideRight
     }
@@ -174,10 +164,16 @@ Item {
         currentIndex: root.currentIndex
         boundsBehavior: Flickable.StopAtBounds
         snapMode: ListView.SnapToItem
+            //implicitHeight: contentHeight
+           // cacheBuffer: Math.min(400, root.model.count * d.itemHeight / 2)
         // 优化：动态计算缓存区域
-        cacheBuffer: Math.min(400, root.model.length * d.itemHeight / 2)
-        displayMarginBeginning: Math.min(200, root.model.length * d.itemHeight / 3)
-        displayMarginEnd: Math.min(200, root.model.length * d.itemHeight / 3)
+        // cacheBuffer: Math.min(400, root.model.length * d.itemHeight / 2)
+        // displayMarginBeginning: Math.min(200, root.model.length * d.itemHeight / 3)
+        // displayMarginEnd: Math.min(200, root.model.length * d.itemHeight / 3)
+
+        cacheBuffer: Math.min(400, root.model.count * d.itemHeight / 2)
+        displayMarginBeginning: Math.min(200, root.model.count * d.itemHeight / 3)
+        displayMarginEnd: Math.min(200, root.model.count * d.itemHeight / 3)
 
 
         delegate: Rectangle {
@@ -206,9 +202,9 @@ Item {
             }
             width: 16  // 固定图标宽度
             height: 16 // 固定图标高度
-            active: modelData.icon !== undefined // 仅当 model 有 icon 字段时加载
+            active: model.icon !== undefined // 仅当 model 有 icon 字段时加载
             sourceComponent: QIcon {
-              icosource: modelData.icon || "" // 从 model 中读取图标类型
+              icosource: model.icon || ""
               iconSize: Math.min(iconLoader.width, iconLoader.height)
             }
           }
@@ -230,16 +226,7 @@ Item {
             anchors.verticalCenter: parent.verticalCenter
             anchors.left: iconLoader.right
             width: parent.width - 16
-            Text {
-              text: {
-                if (typeof modelData === "string") {
-                  return modelData; // 兼容纯字符串数组
-                } else if (modelData.text !== undefined) {
-                  return modelData.text; // 兼容对象数组
-                }
-                return "";
-              }
-            }
+            text: model.text || ""
             color: (root.pressedIndex === index || isCurrent) ? "white" : "black"
             elide: Text.ElideRight
           }
@@ -266,6 +253,9 @@ Item {
 
         //滚动条
         Rectangle {
+
+
+
           id: scrollBar
           visible: d.showScrollBar
           width: 6
