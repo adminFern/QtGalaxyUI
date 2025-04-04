@@ -9,7 +9,7 @@ Item {
   height: implicitHeight
 
   property int pressedIndex: -1
-  property ListModel model: ListModel {}  // 使用标准ListModel
+  property ListModel model  // 使用标准ListModel
   property int currentIndex: -1
   signal activated(int index)
 
@@ -28,7 +28,32 @@ Item {
     property color indicatorPressed: Qt.rgba(0, 0, 0, 0.1)
     property color borderHover: Qt.rgba(0.57, 0.57, 0.57, 0.9)
     property color borderNormal: Qt.rgba(0,0,0,0.25)
+
+
+    // 判断当前选中项是否有图标
+    // 方法2：直接检查（更简洁）
+    function hasIcon() {
+        if (root.currentIndex < 0) return false
+        var item = model.get(root.currentIndex)
+        return item && item.icon  // 自动处理undefined/null/空字符串
+    }
+
+
+    // 图标组件定义
+    property Component comboIconComponent: Component {
+      QIcon {
+        icosource: {
+          if (root.currentIndex < 0) return ""
+          var item = model.get(root.currentIndex)
+          return item.icon || ""
+        }
+        iconSize: 16
+      }
+    }
   }
+
+
+
 
   Rectangle {
     id: comboBox
@@ -39,49 +64,62 @@ Item {
     color: d.semiTransparentBg
     border.color: mainMouseArea.containsMouse ? d.borderHover : d.borderNormal
 
+    // 左侧布局容器（固定宽度）
+    // 左侧布局容器（固定宽度）
 
-
-
+    // 图标加载器（仅在需要时显示）
+    // 1. 图标区域（固定位置）
+    // Loader {
+    //   id: iconLoader
+    //   anchors {
+    //     left: parent.left
+    //     leftMargin: 8
+    //     verticalCenter: parent.verticalCenter
+    //   }
+    //   width: 16
+    //   height: 16
+    //   active: {
+    //     if (root.currentIndex < 0) return false
+    //     return model.get(root.currentIndex).icon !== undefined
+    //   }
+    //   sourceComponent: Image {
+    //     source: model.get(root.currentIndex).icon || ""
+    //     fillMode: Image.PreserveAspectFit
+    //   }
+    // }
     Loader {
-      id: comboIconLoader
-      anchors {
-        left: parent.left
-        leftMargin: 8
-        verticalCenter: parent.verticalCenter
-      }
-      width: 16
-      height: 16
-      active: {
-        if (root.currentIndex < 0) return false;
-        var item = model.get(root.currentIndex);
-        return item && item.icon !== undefined;
-      }
-      sourceComponent: QIcon {
-        icosource: {
-          if (root.currentIndex < 0) return "";
-          var item = model.get(root.currentIndex);
-          return item.icon || "";
-        }
-        iconSize: Math.min(comboIconLoader.width, comboIconLoader.height)
-      }
-    }
-
-
-
-
+           id: comboIconLoader
+           anchors {
+             left: parent.left
+             leftMargin: 8
+             verticalCenter: parent.verticalCenter
+           }
+           width: 16
+           height: 16
+           active: {
+             if (root.currentIndex < 0) return false
+             var item = model.get(root.currentIndex)
+             return item && item.icon !== undefined
+           }
+           sourceComponent: active ? d.comboIconComponent : null
+         }
+    // 2. 文本区域（动态调整）
     Text {
       id: displayText
-      anchors.verticalCenter: parent.verticalCenter
-      anchors.left: comboIconLoader.right
-      anchors.leftMargin: 5
-      width: comboBox.width - indicatorRec.width - 8
-      text: {
-        if (root.currentIndex < 0) return "请选择";
-        var item = model.get(root.currentIndex);
-        return item.text || String(item); // 优先使用text属性，否则转为字符串
+      anchors {
+        left: d.hasIcon() ?comboIconLoader.right:parent.left
+
+        leftMargin: 3
+        // right: indicatorRec.left
+        //  rightMargin: 4
+        verticalCenter: parent.verticalCenter
       }
+      text: root.currentIndex < 0 ? "请选择" :model.get(root.currentIndex).text
       elide: Text.ElideRight
     }
+
+
+
     Rectangle {
       id: indicatorRec
       radius: d.radius
@@ -164,20 +202,12 @@ Item {
         currentIndex: root.currentIndex
         boundsBehavior: Flickable.StopAtBounds
         snapMode: ListView.SnapToItem
-            //implicitHeight: contentHeight
-           // cacheBuffer: Math.min(400, root.model.count * d.itemHeight / 2)
-        // 优化：动态计算缓存区域
-        // cacheBuffer: Math.min(400, root.model.length * d.itemHeight / 2)
-        // displayMarginBeginning: Math.min(200, root.model.length * d.itemHeight / 3)
-        // displayMarginEnd: Math.min(200, root.model.length * d.itemHeight / 3)
-
         cacheBuffer: Math.min(400, root.model.count * d.itemHeight / 2)
         displayMarginBeginning: Math.min(200, root.model.count * d.itemHeight / 3)
         displayMarginEnd: Math.min(200, root.model.count * d.itemHeight / 3)
 
-
+        //项目数据代理
         delegate: Rectangle {
-
           id: delegateItem
           width: ListView.view.width
           height: d.itemHeight
@@ -190,7 +220,6 @@ Item {
             else if (isCurrent) return "darkmagenta"
             else return "transparent"
           }
-
 
           // 添加 Loader 动态加载 QIcon
           Loader {
@@ -209,8 +238,6 @@ Item {
             }
           }
 
-
-
           // 添加颜色变化的动画效果
           Behavior on color {
             ColorAnimation {
@@ -219,12 +246,9 @@ Item {
             }
           }
 
-
-
-
           Text {
             anchors.verticalCenter: parent.verticalCenter
-            anchors.left: iconLoader.right
+            anchors.left: model.icon ? iconLoader.right : parent.left
             width: parent.width - 16
             text: model.text || ""
             color: (root.pressedIndex === index || isCurrent) ? "white" : "black"
@@ -249,13 +273,11 @@ Item {
             onCanceled: root.pressedIndex = -1
             onExited: root.pressedIndex = -1
           }
-        }
+        }//项目数据代理
 
-        //滚动条
+
+        //滚动条实现区域
         Rectangle {
-
-
-
           id: scrollBar
           visible: d.showScrollBar
           width: 6
@@ -302,10 +324,13 @@ Item {
               }
             }
           }
-        }
-
+        }//滚动条实现区域
       }//ListView
     }//Item
+
+
+
+
     function toggle() {
       if (opened) close()
       else {
