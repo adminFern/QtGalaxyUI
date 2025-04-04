@@ -22,6 +22,7 @@ void Theme::refreshColors()
     ItemBackgroundColor(isDark?QColor(255, 255, 255, qRound(255 * 0.02)):QColor(0, 0, 0,qRound(255 * 0.02)));
     ItemBordercolor(isDark?QColor(255, 255, 255, qRound(255 * 0.3)):QColor(0, 0, 0,qRound(255 * 0.3)));
     ItemBorderHovercolor(isDark?QColor(255, 255, 255, qRound(255 * 0.4)):QColor(0, 0, 0,qRound(255 * 0.4)));
+    ItemrHovercolor(isDark?QColor(255, 255, 255, qRound(255 * 0.08)):QColor(0, 0, 0,qRound(255 * 0.08)));
 
 }
 

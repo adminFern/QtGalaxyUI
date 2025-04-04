@@ -14,7 +14,7 @@ class Theme : public QObject
     Q_PROPERTY_AUTO(QColor,ItemBackgroundColor)//文本颜色
     Q_PROPERTY_AUTO(QColor,ItemBordercolor)//项目边框颜色
     Q_PROPERTY_AUTO(QColor,ItemBorderHovercolor)//项目边框颜色
-
+    Q_PROPERTY_AUTO(QColor,ItemrHovercolor)//项目边框颜色
 
     QML_NAMED_ELEMENT(Theme)
     QML_UNCREATABLE("")

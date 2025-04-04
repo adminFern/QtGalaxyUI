@@ -25,16 +25,12 @@ Item {
     property bool showScrollBar: model.count * itemHeight > dropDownHeight
 
     // 颜色定义
-    property color semiTransparentBg: Qt.rgba(1,1,1,0.1)
+
     property color indicatorHover: Qt.rgba(0, 0, 0, 0.06)
     property color indicatorPressed: Qt.rgba(0, 0, 0, 0.1)
-    property color borderHover: Qt.rgba(0.57, 0.57, 0.57, 0.9)
-    property color borderNormal: Qt.rgba(0,0,0,0.25)
 
 
-    property bool isDark: Theme.dark
 
-    property color textColor: Theme.ItemTextColor
 
 
 
@@ -52,7 +48,7 @@ Item {
     height: root.height
     radius: d.radius
     border.width: d.borderWidth
-    color:Theme.ItemBackgroundColor
+    color:mainMouseArea.containsMouse ?Theme.ItemrHovercolor:Theme.ItemBackgroundColor
     border.color: mainMouseArea.containsMouse ? Theme.ItemBorderHovercolor : Theme.ItemBordercolor
 
     QIcon{
@@ -60,7 +56,7 @@ Item {
       anchors.verticalCenter: comboBox.verticalCenter
       anchors.left: comboBox.left
       id: comboIconLoader
-      icocolor: d.textColor
+      icocolor:Theme.ItemTextColor
       iconSize: comboBox.height*0.5
       icosource: {
         if (root.currentIndex < 0) return ""
@@ -74,7 +70,7 @@ Item {
     //文本
     Text {
       id: displayText
-      color: d.textColor
+      color: Theme.ItemTextColor
       anchors {
         left: d.hasIcon() ?comboIconLoader.right:parent.left
         leftMargin: 3
@@ -96,14 +92,16 @@ Item {
       height: parent.height - 6
       width: parent.height - 6
       color: {
-        if (mainMouseArea.pressed && mainMouseArea.isIndicatorHovered) return d.indicatorPressed
-        else if (mainMouseArea.containsMouse && mainMouseArea.isIndicatorHovered) return d.indicatorHover
-        else return "transparent"
+        if (mainMouseArea.pressed && mainMouseArea.isIndicatorHovered){
+            return d.indicatorPressed
+        }else if (mainMouseArea.containsMouse && mainMouseArea.isIndicatorHovered){
+          return d.indicatorHover
+        }else return "transparent"
       }
 
       QIcon {
         id: icon
-        icocolor: d.textColor
+        icocolor: Theme.ItemTextColor
         iconSize: parent.height / 2
         anchors.centerIn: parent
         icosource: FluentIcons.q_ChevronDown
@@ -253,7 +251,7 @@ Item {
             sourceComponent: QIcon {
               icosource: model.icon || ""
               iconSize: Math.min(iconLoader.width, iconLoader.height)
-              icocolor: d.textColor
+              icocolor: Theme.ItemTextColor
             }
           }
 
@@ -273,12 +271,12 @@ Item {
             width: parent.width - 16
             text: model.text || ""
             color:{
-              if((root.pressedIndex === index || isCurrent)&&d.isDark){
+              if((root.pressedIndex === index || isCurrent)&&Theme.dark){
                 return "black"
-              }if((root.pressedIndex === index || isCurrent)&&!d.isDark){
+              }if((root.pressedIndex === index || isCurrent)&&!Theme.dark){
                 return "white"
               }
-              return d.textColor
+              return Theme.ItemTextColor
             }
             elide: Text.ElideRight
           }
