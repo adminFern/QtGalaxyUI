@@ -127,17 +127,17 @@ Window {
         // }
         QComboBox{
             id:bobox
-            // model:regionModel//generateRandomData()
+
             onActivated: function(index) {
                 //console.log("选择了:", model.get(index).text, "图标:", model.get(index).icon)
             }
             Component.onCompleted: {
-                // 将生成的数据添加到模型中
+
                 for (var i = 0; i < regionData.length; i++) {
                     regionModel.append(regionData[i]);
                 }
 
-                // 将模型赋值给ComboBox
+
                 model = regionModel;
             }
         }
