@@ -1,11 +1,13 @@
 import QtQuick
+import QtQuick.Controls
+import GalaxyUI
 import "../Controls"
 Window {
     width: 640
     height: 480
     visible: true
     title: qsTr("Hello ccc")
-    property int name: 30
+    color: Theme.dark?Qt.rgba(0.32,0.32,0.32):"white"
 
 
     // 定义可用的图标集合
@@ -79,7 +81,7 @@ Window {
         var prefixes = ["东", "西", "南", "北", "新", "大", "小", "老", "古", "金", "银", "铜", "铁"];
         var suffixes = ["山", "河", "湖", "海", "江", "川", "林", "田", "原", "坡", "岭", "港", "湾"];
 
-        while (data.length < 10000) {
+        while (data.length < 30) {
             // 生成随机地区名称
             var name;
             var attempt = 0;
@@ -122,27 +124,58 @@ Window {
         padding: 5
         spacing: 6
         leftPadding: 5
-        // QIcon{
-        //     icosource: FluentIcons.q_VPN
-        // }
+
         QComboBox{
             id:bobox
 
             onActivated: function(index) {
-                //console.log("选择了:", model.get(index).text, "图标:", model.get(index).icon)
+                console.log("选择了:", model.get(index).text, "图标:", model.get(index).icon)
             }
             Component.onCompleted: {
-
                 for (var i = 0; i < regionData.length; i++) {
                     regionModel.append(regionData[i]);
                 }
-
-
                 model = regionModel;
             }
         }
-    }
+        Button{
+            height: 35
+            width:68
+            text: "浅色"
+            onClicked:{
+                if(Theme.dark) {
+                    Theme.ThemeType=Theme.Light
 
+                }
+            }
+
+
+        }
+        Button{
+            height: 35
+            width:68
+            text: "深色"
+            onClicked:{
+                if(!Theme.dark) {
+                    Theme.ThemeType=Theme.Dark
+                }
+            }
+        }
+        Button{
+            height: 35
+            width:68
+            text: "系统颜色"
+            onClicked:Theme.ThemeType=Theme.System
+        }
+    }
+    Label{
+        id:darktexe
+        width: parent.width
+        height: 30
+        anchors.bottom: parent.bottom
+        text: "当前的主题模式是否Dark："+Theme.dark
+
+    }
 
 
 

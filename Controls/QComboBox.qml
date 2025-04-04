@@ -1,6 +1,6 @@
 import QtQuick
 import QtQuick.Controls
-
+import GalaxyUI
 Item {
   id: root
   implicitWidth: 180
@@ -32,6 +32,11 @@ Item {
     property color borderNormal: Qt.rgba(0,0,0,0.25)
 
 
+    property bool isDark: Theme.dark
+
+    property color textColor: Theme.ItemTextColor
+
+
 
     // 判断当前选中项是否有图标
     function hasIcon() {
@@ -47,15 +52,15 @@ Item {
     height: root.height
     radius: d.radius
     border.width: d.borderWidth
-    color: d.semiTransparentBg
-    border.color: mainMouseArea.containsMouse ? d.borderHover : d.borderNormal
-
+    color:Theme.ItemBackgroundColor
+    border.color: mainMouseArea.containsMouse ? Theme.ItemBorderHovercolor : Theme.ItemBordercolor
 
     QIcon{
       anchors.leftMargin: 3
       anchors.verticalCenter: comboBox.verticalCenter
       anchors.left: comboBox.left
       id: comboIconLoader
+      icocolor: d.textColor
       iconSize: comboBox.height*0.5
       icosource: {
         if (root.currentIndex < 0) return ""
@@ -69,6 +74,7 @@ Item {
     //文本
     Text {
       id: displayText
+      color: d.textColor
       anchors {
         left: d.hasIcon() ?comboIconLoader.right:parent.left
         leftMargin: 3
@@ -97,6 +103,7 @@ Item {
 
       QIcon {
         id: icon
+        icocolor: d.textColor
         iconSize: parent.height / 2
         anchors.centerIn: parent
         icosource: FluentIcons.q_ChevronDown
@@ -182,13 +189,13 @@ Item {
 
 
     background: Shadow {
+      color: Theme.dark?Qt.rgba(1,1,1,0.2):Qt.rgba(0,0,0,0.6)
       Rectangle {
         id: bg
         anchors.fill: parent
         radius: d.radius
-        color: Qt.rgba(1,1,1,0.8)
-        opacity: 0.9
-        border.color: "#BDBDBD"
+        color: Theme.ItemBackgroundColor
+        border.color: Theme.ItemBordercolor
         border.width: 1
       }
     }
@@ -246,6 +253,7 @@ Item {
             sourceComponent: QIcon {
               icosource: model.icon || ""
               iconSize: Math.min(iconLoader.width, iconLoader.height)
+              icocolor: d.textColor
             }
           }
 
@@ -264,7 +272,14 @@ Item {
             anchors.left: model.icon ? iconLoader.right : parent.left
             width: parent.width - 16
             text: model.text || ""
-            color: (root.pressedIndex === index || isCurrent) ? "white" : "black"
+            color:{
+              if((root.pressedIndex === index || isCurrent)&&d.isDark){
+                return "black"
+              }if((root.pressedIndex === index || isCurrent)&&!d.isDark){
+                return "white"
+              }
+              return d.textColor
+            }
             elide: Text.ElideRight
           }
 
@@ -312,7 +327,7 @@ Item {
             }
             radius: width / 2
             color: handleArea.pressed ? Qt.rgba(0.6, 0.6, 0.6, 0.9) :
-                                        handleArea.containsMouse ? Qt.rgba(0.6, 0.6, 0.6, 0.7) : Qt.rgba(0.6, 0.6, 0.6, 0.5)
+                                        handleArea.containsMouse ? Qt.rgba(0.6, 0.6, 0.6, 0.5) : Qt.rgba(0.6, 0.6, 0.6, 0.2)
             MouseArea {
               id: handleArea
               anchors.fill: parent
@@ -344,20 +359,20 @@ Item {
     * @param {Object} item - 新的数据项（必须包含text属性）
     * @return {bool} 是否替换成功
     */
-   function replaceItem(index, item) {
-       if (model && index >= 0 && index < model.count && item) {
-           model.set(index, item)
+  function replaceItem(index, item) {
+    if (model && index >= 0 && index < model.count && item) {
+      model.set(index, item)
 
-           // 如果替换的是当前选中项，更新显示
-           if (index === currentIndex) {
-               currentIndexUpdated(currentIndex) // 手动触发信号
-           }
+      // 如果替换的是当前选中项，更新显示
+      if (index === currentIndex) {
+        currentIndexUpdated(currentIndex) // 手动触发信号
+      }
 
-           root.modelDataChanged() // 触发数据变化信号
-           return true
-       }
-       return false
-   }
+      root.modelDataChanged() // 触发数据变化信号
+      return true
+    }
+    return false
+  }
   //-----------------------
   // 清空模型中的所有数据，并将当前选中索引重置为-1
   function clearAll() {
@@ -384,7 +399,7 @@ Item {
       if (model.count === 0) {
         currentIndex = -1
       }
-       root.modelDataChanged()
+      root.modelDataChanged()
     }
   }
   // 在模型头部插入新项
@@ -397,7 +412,7 @@ Item {
       if (model.count === 1) {
         currentIndex = 0
       }
-       root.modelDataChanged()
+      root.modelDataChanged()
     }
   }
   // 在模型尾部追加新项
@@ -410,7 +425,7 @@ Item {
       if (model.count === 1) {
         currentIndex = 0
       }
-       root.modelDataChanged()
+      root.modelDataChanged()
     }
   }
   /**
