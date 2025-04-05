@@ -7,13 +7,17 @@ Item {
   implicitHeight: 40
   width: implicitWidth
   height: implicitHeight
-
+  //-----------------------------
   property ListModel model
   property int currentIndex: -1
   signal activated(int index)  // 选中某项时触发
   signal opened()                            // 下拉框展开时触发
   signal closed()                            // 下拉框收起时触发
   signal modelDataChanged()                      // 数据被修改（增/删/改）时触发
+  //------------------------------
+  property color itemSelectedColor: "#004080"
+  property color itemHoverColor: "#ADD8E6"
+  property color itemPressedColor:"#4682B4"
 
   QtObject {
     id: d
@@ -25,7 +29,6 @@ Item {
     property bool showScrollBar: model.count * itemHeight > dropDownHeight
     property int pressedIndex: -1
     // 颜色定义
-
     property color indicatorHover: Theme.dark?  Qt.rgba(1, 1, 1, 0.06):Qt.rgba(0, 0, 0, 0.06)
     property color indicatorPressed: Theme.dark?Qt.rgba(1, 1, 1, 0.1):Qt.rgba(0, 0, 0, 0.1)
 
@@ -93,7 +96,7 @@ Item {
       width: parent.height - 6
       color: {
         if (mainMouseArea.pressed && mainMouseArea.isIndicatorHovered){
-            return d.indicatorPressed
+          return d.indicatorPressed
         }else if (mainMouseArea.containsMouse && mainMouseArea.isIndicatorHovered){
           return d.indicatorHover
         }else return "transparent"
@@ -231,9 +234,9 @@ Item {
           property bool isCurrent: root.currentIndex === index
 
           color: {
-            if (d.pressedIndex === index) return "crimson"
-            else if (hoverArea.containsMouse && !isCurrent) return "deeppink"
-            else if (isCurrent) return "darkmagenta"
+            if (d.pressedIndex === index) return root.itemPressedColor
+            else if (hoverArea.containsMouse && !isCurrent) return root.itemHoverColor
+            else if (isCurrent) return root.itemSelectedColor
             else return "transparent"
           }
 
