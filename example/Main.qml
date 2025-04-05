@@ -3,7 +3,7 @@ import QtQuick.Controls
 import GalaxyUI
 import "../Controls"
 Window {
-    width: 640
+    width: 650
     height: 480
     visible: true
     title: qsTr("Hello ccc")
@@ -118,26 +118,14 @@ Window {
         id: regionModel
     }
 
-
+Column{
 
     Row{
         padding: 5
         spacing: 6
         leftPadding: 5
 
-        QComboBox{
-            id:bobox
 
-            onActivated: function(index) {
-                console.log("选择了:", model.get(index).text, "图标:", model.get(index).icon)
-            }
-            Component.onCompleted: {
-                for (var i = 0; i < regionData.length; i++) {
-                    regionModel.append(regionData[i]);
-                }
-                model = regionModel;
-            }
-        }
         Button{
             height: 35
             width:68
@@ -167,7 +155,50 @@ Window {
             text: "系统颜色"
             onClicked:Theme.ThemeType=Theme.System
         }
+        Button{
+            height: 35
+            width:100
+            text: "打开"
+            //onClicked:Theme.ThemeType=Theme.System
+        }
+        Button{
+            height: 35
+            width:100
+            text: "关闭"
+            //onClicked:Theme.ThemeType=Theme.System
+        }
+        Button{
+            height: 35
+            width:100
+            text: "清空"
+            //onClicked:Theme.ThemeType=Theme.System
+        }
+        Button{
+            height: 35
+            width:100
+            text: "替换"
+
+            //onClicked:Theme.ThemeType=Theme.System
+        }
     }
+
+
+}
+QComboBox{
+    id:bobox
+    anchors.centerIn: parent
+
+    onActivated: function(index) {
+        console.log("选择了:", model.get(index).text, "图标:", model.get(index).icon)
+    }
+    Component.onCompleted: {
+        for (var i = 0; i < regionData.length; i++) {
+            regionModel.append(regionData[i]);
+        }
+        model = regionModel;
+    }
+}
+
     Label{
         id:darktexe
         width: parent.width

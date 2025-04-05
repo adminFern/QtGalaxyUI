@@ -7,7 +7,7 @@ Item {
   implicitHeight: 40
   width: implicitWidth
   height: implicitHeight
-  property int pressedIndex: -1
+
   property ListModel model
   property int currentIndex: -1
   signal activated(int index)  // 选中某项时触发
@@ -23,11 +23,11 @@ Item {
     property int borderWidth: 1
     property int dropDownHeight: Math.min(visibleItemCount * itemHeight, model.count * itemHeight) + 6//修改
     property bool showScrollBar: model.count * itemHeight > dropDownHeight
-
+    property int pressedIndex: -1
     // 颜色定义
 
-    property color indicatorHover: Qt.rgba(0, 0, 0, 0.06)
-    property color indicatorPressed: Qt.rgba(0, 0, 0, 0.1)
+    property color indicatorHover: Theme.dark?  Qt.rgba(1, 1, 1, 0.06):Qt.rgba(0, 0, 0, 0.06)
+    property color indicatorPressed: Theme.dark?Qt.rgba(1, 1, 1, 0.1):Qt.rgba(0, 0, 0, 0.1)
 
 
 
@@ -212,7 +212,7 @@ Item {
       ListView {
         anchors.fill: parent
         id: listView
-        spacing: 2
+        spacing: 1
         clip: true
         model: root.model
         currentIndex: root.currentIndex
@@ -231,7 +231,7 @@ Item {
           property bool isCurrent: root.currentIndex === index
 
           color: {
-            if (root.pressedIndex === index) return "crimson"
+            if (d.pressedIndex === index) return "crimson"
             else if (hoverArea.containsMouse && !isCurrent) return "deeppink"
             else if (isCurrent) return "darkmagenta"
             else return "transparent"
@@ -271,9 +271,9 @@ Item {
             width: parent.width - 16
             text: model.text || ""
             color:{
-              if((root.pressedIndex === index || isCurrent)&&Theme.dark){
+              if((d.pressedIndex === index || isCurrent)&&Theme.dark){
                 return "black"
-              }if((root.pressedIndex === index || isCurrent)&&!Theme.dark){
+              }if((d.pressedIndex === index || isCurrent)&&!Theme.dark){
                 return "white"
               }
               return Theme.ItemTextColor
@@ -289,15 +289,15 @@ Item {
 
             onPressed: if (!isCurrent) {
                          root.currentIndex = index
-                         root.pressedIndex = index
+                         d.pressedIndex = index
                          root.activated(index)
                        }
             onReleased: {
-              root.pressedIndex = -1
+              d.pressedIndex = -1
               popup.close()  // 关键修复点
             }
-            onCanceled: root.pressedIndex = -1
-            onExited: root.pressedIndex = -1
+            onCanceled: d.pressedIndex = -1
+            onExited: d.pressedIndex = -1
           }
         }//项目数据代理
 
