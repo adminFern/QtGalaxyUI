@@ -94,5 +94,27 @@ Rectangle {
     signal clicked()
     signal pressed()
     signal released()
+    // 外露方法
+    function setText(newText) {
+        label.text = newText
+    }
+    function setFontFamily(newFontFamily) {
+        label.font.family = newFontFamily
+    }
 
+    function setFontSize(newFontSize) {
+        label.font.pixelSize = newFontSize
+    }
+
+    function setHighlight(newIsHighlight) {
+        isHighlight = newIsHighlight
+    }
+
+    function setHighlightColor(newHighlightColor) {
+        highlightColor = newHighlightColor
+    }
+
+    function setLabelTextColor(newTextColor) {
+        label.color = newTextColor
+    }
 }
