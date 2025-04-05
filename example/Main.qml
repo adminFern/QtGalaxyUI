@@ -118,86 +118,132 @@ Window {
         id: regionModel
     }
 
-Column{
+    Column{
 
-    Row{
-        padding: 5
-        spacing: 6
-        leftPadding: 5
+        Row{
+            padding: 5
+            spacing: 6
+            leftPadding: 5
 
 
-        Button{
-            height: 35
-            width:68
-            text: "浅色"
-            onClicked:{
-                if(Theme.dark) {
-                    Theme.ThemeType=Theme.Light
+            Button{
+                height: 35
+                width:68
+                text: "浅色"
+                onClicked:{
+                    if(Theme.dark) {
+                        Theme.ThemeType=Theme.Light
+
+                    }
+                }
+
+
+            }
+            Button{
+                height: 35
+                width:68
+                text: "深色"
+                onClicked:{
+                    if(!Theme.dark) {
+                        Theme.ThemeType=Theme.Dark
+                    }
+                }
+            }
+            Button{
+                height: 35
+                width:68
+                text: "系统颜色"
+                onClicked:Theme.ThemeType=Theme.System
+            }
+            Button{
+                height: 35
+                width:100
+                text: "打开"
+                onClicked:bobox.open()
+            }
+            Button{
+                height: 35
+                width:100
+                text: "关闭"
+                onClicked:bobox.close()
+            }
+            Button{
+                height: 35
+                width:100
+                text: "清空"
+                onClicked:bobox.clearAll()
+            }
+            Button{
+                height: 35
+                width:100
+                text: "替换"
+
+                onClicked:{
+                    bobox.replaceItem(1,{text:"中国移动,替换了",icon:FluentIcons.q_Marker})
+                }
+            }
+        }
+        Row{
+
+            Button{
+                height: 35
+
+                text: "删除当前选中项目"
+                onClicked:bobox.removeCurrent()
+            }
+            Button{
+                height: 35
+
+                text: "头部插入"
+                onClicked:bobox.addHeadItem({text:"中华人们共和国",icon:FluentIcons.q_Send})
+            }
+            Button{
+                height: 35
+
+                text: "尾部插入"
+                onClicked:bobox.addendItem({text:"中国台湾省",icon:FluentIcons.q_Lock})
+            }
+            Button{
+                height: 35
+
+                text: "当前选中项"
+                onClicked:console.log(bobox.currentIndex)
+            }
+            Button{
+                height: 35
+
+                text: "取指定文本"
+                onClicked:{
+                    console.log(bobox.getItemText(3))
+                }
+            }
+            Button{
+                height: 35
+
+                text: "删除指定"
+                onClicked:{
+                    bobox.removeItem(3)
 
                 }
             }
-
-
         }
-        Button{
-            height: 35
-            width:68
-            text: "深色"
-            onClicked:{
-                if(!Theme.dark) {
-                    Theme.ThemeType=Theme.Dark
-                }
+
+
+    }
+    QComboBox{
+        id:bobox
+        anchors.centerIn: parent
+
+        onActivated: function(index) {
+            console.log("选择了:", model.get(index).text, "图标:", model.get(index).icon)
+        }
+        Component.onCompleted: {
+            for (var i = 0; i < regionData.length; i++) {
+                regionModel.append(regionData[i]);
             }
-        }
-        Button{
-            height: 35
-            width:68
-            text: "系统颜色"
-            onClicked:Theme.ThemeType=Theme.System
-        }
-        Button{
-            height: 35
-            width:100
-            text: "打开"
-            //onClicked:Theme.ThemeType=Theme.System
-        }
-        Button{
-            height: 35
-            width:100
-            text: "关闭"
-            //onClicked:Theme.ThemeType=Theme.System
-        }
-        Button{
-            height: 35
-            width:100
-            text: "清空"
-            //onClicked:Theme.ThemeType=Theme.System
-        }
-        Button{
-            height: 35
-            width:100
-            text: "替换"
-
-            //onClicked:Theme.ThemeType=Theme.System
+            model = regionModel;
         }
     }
-
-
-}
-QComboBox{
-    id:bobox
-    anchors.centerIn: parent
-
-    onActivated: function(index) {
-        console.log("选择了:", model.get(index).text, "图标:", model.get(index).icon)
-    }
-    Component.onCompleted: {
-        for (var i = 0; i < regionData.length; i++) {
-            regionModel.append(regionData[i]);
-        }
-        model = regionModel;
-    }
-}
 
     Label{
         id:darktexe
