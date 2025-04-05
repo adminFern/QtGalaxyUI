@@ -11,34 +11,27 @@ Window {
 
 
     Row{
-        x:5
+        x:15
         y:5
         spacing: 6
         QButton{
-            text: "指针测试"
-
-            onClicked: {
-        console.log("xxx")
-            }
-            onPressed: {
-              console.log("2222")
-
-            }
+            width:50
+            text: "中国一点点"
         }
-        Button{
-            text: "深色"
-            onClicked: {
+        // Button{
+        //     text: "深色"
+        //     onClicked: {
 
-                Theme.ThemeType=Theme.Dark
-            }
-        }
-        Button{
-            text: "浅色"
-            onClicked: {
+        //         Theme.ThemeType=Theme.Dark
+        //     }
+        // }
+        // Button{
+        //     text: "浅色"
+        //     onClicked: {
 
-                Theme.ThemeType=Theme.Light
-            }
-        }
+        //         Theme.ThemeType=Theme.Light
+        //     }
+        // }
 
     }
 
