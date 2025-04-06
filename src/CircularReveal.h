@@ -10,6 +10,7 @@ class CircularReveal : public QQuickPaintedItem {
     Q_OBJECT
     Q_PROPERTY_AUTO_P(QQuickItem *, target)
     Q_PROPERTY_AUTO(int, radius)
+
     QML_NAMED_ELEMENT(CircularReveal)
 public:
     explicit CircularReveal(QQuickItem *parent = nullptr);

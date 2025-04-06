@@ -17,7 +17,7 @@ set(ITEMS_NAME example)
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_SOURCE_DIR}/bin)
 #设置头文件目录
 include_directories(${CMAKE_CURRENT_SOURCE_DIR}/src)
-find_package(Qt6 REQUIRED COMPONENTS Quick)
+find_package(Qt6 REQUIRED COMPONENTS Core Quick)
 qt_standard_project_setup(REQUIRES 6.5)
 
 
@@ -85,7 +85,9 @@ set_target_properties(${ITEMS_NAME} PROPERTIES
 )
 
 target_link_libraries(${ITEMS_NAME}
-    PRIVATE Qt6::Quick
+    PRIVATE
+    Qt6::Core
+    Qt6::Quick
 )
 
 include(GNUInstallDirs)
