@@ -1,28 +1,32 @@
 #include "Theme.h"
 #include <QGuiApplication>
 #include <QPalette>
+#include<QDebug>
 Theme::Theme(QObject *parent)
     : QObject{parent}
 {
     m_ThemeType=Theme::ModeType::Light;
     m_dark=false;
 
-    this->refreshColors();
-    //连接信号槽
-    connect(this, &Theme::darkChanged, this, [=] { refreshColors(); });
-    connect(this, &Theme::ThemeTypeChanged, this, [=] { Q_EMIT darkChanged();});
-    connect(this, &Theme::SystemThemeChanged, this, [=] { refreshColors(); });
+    // this->refreshColors();
+    // //连接信号槽
+    // connect(this, &Theme::darkChanged, this, [=] { refreshColors(); });
+    // connect(this, &Theme::ThemeTypeChanged, this, [=] { Q_EMIT darkChanged();});
+    // connect(this, &Theme::SystemThemeChanged, this, [=] { refreshColors(); });
 }
 
 void Theme::refreshColors()
 {
-    m_SystemTheme=this->getSystemThemeType();
-    auto isDark = dark();
-    ItemTextColor(isDark?QColor(255, 255, 255) : QColor(0, 0, 0));
-    ItemBackgroundColor(isDark?QColor(255, 255, 255, qRound(255 * 0.02)):QColor(0, 0, 0,qRound(255 * 0.02)));
-    ItemBordercolor(isDark?QColor(255, 255, 255, qRound(255 * 0.3)):QColor(0, 0, 0,qRound(255 * 0.3)));
-    ItemBorderHovercolor(QColor(60, 60, 60));
-    ItemrHovercolor(isDark?QColor(255, 255, 255, qRound(255 * 0.08)):QColor(0, 0, 0,qRound(255 * 0.08)));
+    // qDebug()<<"xxxxxxxxxxxx";
+
+
+    // m_SystemTheme=this->getSystemThemeType();
+    // auto isDark = dark();
+    //ItemTextColor(isDark?QColor(255, 255, 255) : QColor(0, 0, 0));
+    // ItemBackgroundColor(isDark?QColor(255, 255, 255, qRound(255 * 0.02)):QColor(0, 0, 0,qRound(255 * 0.02)));
+    // ItemBordercolor(isDark?QColor(255, 255, 255, qRound(255 * 0.3)):QColor(0, 0, 0,qRound(255 * 0.3)));
+    // ItemBorderHovercolor(QColor(60, 60, 60));
+    // ItemrHovercolor(isDark?QColor(255, 255, 255, qRound(255 * 0.08)):QColor(0, 0, 0,qRound(255 * 0.08)));
 
 }
 
@@ -42,4 +46,17 @@ bool Theme::dark() const
     } else {
         return false;
     }
+}
+
+int Theme::themeType() const
+{
+    return m_themeType;
+}
+
+void Theme::setThemeType(int newThemeType)
+{
+    if (m_themeType == newThemeType)
+        return;
+    m_themeType = newThemeType;
+    emit themeTypeChanged();
 }

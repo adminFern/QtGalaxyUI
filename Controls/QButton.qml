@@ -71,9 +71,10 @@ Rectangle {
 
     Text {
         id: label
-        width: parent.width
         padding: 3
         anchors.centerIn: parent
+        verticalAlignment: Text.AlignVCenter // 垂直居中对齐
+        horizontalAlignment: Text.AlignRight // 水平靠右对齐
         elide: Text.ElideRight
         text: root.text
         font.pixelSize: 14

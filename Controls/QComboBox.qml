@@ -57,6 +57,14 @@ Item {
     property color indicatorHover: Theme.dark? Qt.rgba(1, 1, 1, 0.06):Qt.rgba(0, 0, 0, 0.06)
     property color indicatorPressed: Theme.dark?Qt.rgba(1, 1, 1, 0.1):Qt.rgba(0, 0, 0, 0.1)
 
+    // 定义颜色属性
+        property color hoverColor: Theme.dark ? "#80505050" : "#80EEEEEE" // 添加 80% 透明度
+        property color normalColor: Theme.dark ? "#50606060" : "#50F8F8F8" // 添加 80% 透明度
+        property color pressedColor: Theme.dark ? "#80404040" : "#80E5E5E5" // 添加 80% 透明度
+        property color borderColor: Theme.dark ? "#80707070" : "#80DDDDDD" // 添加 80% 透明度
+        property color hoverBorderColor: Theme.dark ? "#80808080" : "#80BFBFBF" // 添加 80% 透明度
+        property color textColor: Theme.dark ? "white" : "black"
+
     // 判断当前选中项是否有图标
     function hasIcon() {
       if (root.currentIndex < 0) return false
@@ -72,8 +80,8 @@ Item {
     height: root.height
     radius: d.radius
     border.width: d.borderWidth
-    color: mainMouseArea.containsMouse ? Theme.ItemrHovercolor : Theme.ItemBackgroundColor  // 根据悬停状态改变背景色
-    border.color: mainMouseArea.containsMouse ? Theme.ItemBorderHovercolor : Theme.ItemBordercolor  // 根据悬停状态改变边框色
+    color: mainMouseArea.containsMouse ? d.hoverColor : d.normalColor  // 根据悬停状态改变背景色
+    border.color: mainMouseArea.containsMouse ? d.hoverBorderColor : d.borderColor  // 根据悬停状态改变边框色
 
     // 当前选中项的图标
     QIcon {
@@ -81,7 +89,7 @@ Item {
       anchors.verticalCenter: comboBox.verticalCenter
       anchors.left: comboBox.left
       id: comboIconLoader
-      icocolor: Theme.ItemTextColor  // 图标颜色随主题变化
+      icocolor: d.textColor  // 图标颜色随主题变化
       iconSize: comboBox.height*0.5  // 图标大小为高度的一半
       icosource: {  // 动态获取当前选中项的图标
         if (root.currentIndex < 0) return ""
@@ -89,13 +97,13 @@ Item {
         return item.icon || ""
       }
       visible: root.model && root.currentIndex >= 0 && root.currentIndex < root.model.count ?
-                (root.model.get(root.currentIndex).icon !== undefined && root.model.get(root.currentIndex).icon !== "") : false
+                 (root.model.get(root.currentIndex).icon !== undefined && root.model.get(root.currentIndex).icon !== "") : false
     }
 
     // 当前选中项的文本
     Text {
       id: displayText
-      color: Theme.ItemTextColor  // 文本颜色随主题变化
+      color:d.textColor // 文本颜色随主题变化
       anchors {
         left: d.hasIcon() ? comboIconLoader.right : parent.left
         leftMargin: 8
@@ -126,7 +134,7 @@ Item {
       // 下拉箭头图标
       QIcon {
         id: icon
-        icocolor: Theme.ItemTextColor
+        icocolor:d.textColor
         iconSize: parent.height / 2
         anchors.centerIn: parent
         icosource: FluentIcons.q_ChevronDown  // 使用预定义的下拉图标
@@ -201,8 +209,8 @@ Item {
         id: bg
         anchors.fill: parent
         radius: d.radius
-        color: Theme.ItemBackgroundColor  // 背景色随主题变化
-        border.color: Theme.ItemBordercolor  // 边框色随主题变化
+        color: d.normalColor  // 背景色随主题变化
+        border.color: d.borderColor  // 边框色随主题变化
         border.width: 1
       }
     }
@@ -257,7 +265,7 @@ Item {
             sourceComponent: QIcon {
               icosource: model.icon || ""  // 图标资源
               iconSize: Math.min(iconLoader.width, iconLoader.height)  // 图标大小
-              icocolor: Theme.ItemTextColor  // 图标颜色随主题变化
+              icocolor:  d.textColor  // 图标颜色随主题变化
             }
           }
 
@@ -283,7 +291,7 @@ Item {
               if((d.pressedIndex === index || isCurrent) && !Theme.dark){
                 return "white"
               }
-              return Theme.ItemTextColor
+              return d.textColor
             }
             elide: Text.ElideRight  // 文本过长时显示省略号
           }
@@ -334,7 +342,7 @@ Item {
             radius: width / 2  // 圆角
             color: handleArea.pressed ? Qt.rgba(0.6, 0.6, 0.6, 0.8) :  // 按下状态
                                         handleArea.containsMouse ? Qt.rgba(0.6, 0.6, 0.6, 0.5) : // 悬停状态
-                                        Qt.rgba(0.6, 0.6, 0.6, 0.2)  // 默认状态
+                                                                   Qt.rgba(0.6, 0.6, 0.6, 0.2)  // 默认状态
 
             // 滑块鼠标区域
             MouseArea {
@@ -420,12 +428,12 @@ Item {
    * @return {bool} 返回 true 表示删除成功，返回 false 表示删除失败（例如索引无效）
    */
   function removeItem(index) {
-      if (model && index >= 0 && index < model.count) {
-          model.remove(index); // 删除指定索引的项
-          root.modelDataChanged(); // 触发数据变化信号
-          return true; // 删除成功
-      }
-      return false; // 删除失败，索引无效
+    if (model && index >= 0 && index < model.count) {
+      model.remove(index); // 删除指定索引的项
+      root.modelDataChanged(); // 触发数据变化信号
+      return true; // 删除成功
+    }
+    return false; // 删除失败，索引无效
   }
 
   /**
@@ -495,11 +503,11 @@ Item {
    * @return {string|null} 返回指定项的文本数据，如果索引无效则返回 null
    */
   function getItemText(index) {
-      if (model && index >= 0 && index < model.count) {
-          var item = model.get(index); // 获取指定索引的数据对象
-          return item.text || null;    // 返回 text 属性，如果不存在则返回 null
-      }
-      return null; // 如果索引无效，返回 null
+    if (model && index >= 0 && index < model.count) {
+      var item = model.get(index); // 获取指定索引的数据对象
+      return item.text || null;    // 返回 text 属性，如果不存在则返回 null
+    }
+    return null; // 如果索引无效，返回 null
   }
 
   /**
