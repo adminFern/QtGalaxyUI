@@ -30,25 +30,25 @@ Rectangle {
         property color darkTextColor: "#FFFFFF"
 
         function adjustColor(color, factor) {
-            return Theme.dark ? Qt.darker(color, factor) : Qt.lighter(color, factor)
+            return Theme.isDark.dark ? Qt.darker(color, factor) : Qt.lighter(color, factor)
         }
         function getNormalColor() {
-            return root.isHighlight ? root.highlightColor : (Theme.dark ? darkNormalColor : lightNormalColor)
+            return root.isHighlight ? root.highlightColor : (Theme.isDark ? darkNormalColor : lightNormalColor)
         }
         function getHoverColor() {
-            return root.isHighlight ? adjustColor(root.highlightColor, 1.4) : (Theme.dark ? darkHoverColor : lightHoverColor)
+            return root.isHighlight ? adjustColor(root.highlightColor, 1.4) : (Theme.isDark ? darkHoverColor : lightHoverColor)
         }
         function getPressedColor() {
-            return root.isHighlight ? adjustColor(root.highlightColor, 1.2) : (Theme.dark ? darkPressedColor : lightPressedColor)
+            return root.isHighlight ? adjustColor(root.highlightColor, 1.2) : (Theme.isDark ? darkPressedColor : lightPressedColor)
         }
         function getBorderColor() {
-            return root.isHighlight ? "transparent" : (Theme.dark ? darkBorderColor : lightBorderColor)
+            return root.isHighlight ? "transparent" : (Theme.isDark ? darkBorderColor : lightBorderColor)
         }
         function getTextColor() {
             if (!root.isHighlight) {
-                return Theme.dark ? darkTextColor : lightTextColor
+                return Theme.isDark.dark ? darkTextColor : lightTextColor
             }
-            return mouseArea.pressed ? (Theme.dark ? "black" : "white") : (Theme.dark ? "white" : "black")
+            return mouseArea.pressed ? (Theme.isDark ? "black" : "white") : (Theme.isDark ? "white" : "black")
         }
     }
     color: mouseArea.pressed ? d.getPressedColor() : (mouseArea.containsMouse ? d.getHoverColor() : d.getNormalColor())

@@ -15,7 +15,7 @@ Window {
 
 
     // 窗口背景色（带动画过渡）
-    color: Theme.dark ? "cornflowerblue" : "white"
+    color: Theme.isDark ? "cornflowerblue" : "white"
     Behavior on color {
         ColorAnimation {
             duration: 800
@@ -61,8 +61,7 @@ Window {
             width: 120
             height: 40
             onClicked: {
-                Theme.ThemeType = Theme.Light
-
+                Theme.themeType=Theme.ModeType.Light
             }
 
         }
@@ -72,16 +71,24 @@ Window {
             text: "深色模式"
             width: 120
             height: 40
-
             onClicked: {
-                Theme.ThemeType = Theme.Dark
+                Theme.themeType=Theme.ModeType.Dark
+            }
+        }
+        QButton {
+            id: systemButton
+            text: "系统模式"
+            width: 120
+            height: 40
+            onClicked: {
+                Theme.themeType=Theme.ModeType.System
             }
         }
     }
     Connections {
         target: Theme
         function onThemeTypeChanged() {
-            console.log("主题变化检测到")
+            console.log("主题类型已改变，新值:", Theme.themeType)
 
         }
     }

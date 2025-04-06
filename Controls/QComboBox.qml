@@ -54,16 +54,16 @@ Item {
     property int pressedIndex: -1  // 当前被按下的项索引
 
     // 指示器颜色
-    property color indicatorHover: Theme.dark? Qt.rgba(1, 1, 1, 0.06):Qt.rgba(0, 0, 0, 0.06)
-    property color indicatorPressed: Theme.dark?Qt.rgba(1, 1, 1, 0.1):Qt.rgba(0, 0, 0, 0.1)
+    property color indicatorHover: Theme.isDark? Qt.rgba(1, 1, 1, 0.06):Qt.rgba(0, 0, 0, 0.06)
+    property color indicatorPressed: Theme.isDark?Qt.rgba(1, 1, 1, 0.1):Qt.rgba(0, 0, 0, 0.1)
 
     // 定义颜色属性
-        property color hoverColor: Theme.dark ? "#80505050" : "#80EEEEEE" // 添加 80% 透明度
-        property color normalColor: Theme.dark ? "#50606060" : "#50F8F8F8" // 添加 80% 透明度
-        property color pressedColor: Theme.dark ? "#80404040" : "#80E5E5E5" // 添加 80% 透明度
-        property color borderColor: Theme.dark ? "#80707070" : "#80DDDDDD" // 添加 80% 透明度
-        property color hoverBorderColor: Theme.dark ? "#80808080" : "#80BFBFBF" // 添加 80% 透明度
-        property color textColor: Theme.dark ? "white" : "black"
+        property color hoverColor: Theme.isDark ? "#80505050" : "#80EEEEEE" // 添加 80% 透明度
+        property color normalColor: Theme.isDark ? "#50606060" : "#50F8F8F8" // 添加 80% 透明度
+        property color pressedColor: Theme.isDark ? "#80404040" : "#80E5E5E5" // 添加 80% 透明度
+        property color borderColor: Theme.isDark ? "#80707070" : "#80DDDDDD" // 添加 80% 透明度
+        property color hoverBorderColor: Theme.isDark ? "#80808080" : "#80BFBFBF" // 添加 80% 透明度
+        property color textColor: Theme.isDark ? "white" : "black"
 
     // 判断当前选中项是否有图标
     function hasIcon() {
@@ -204,7 +204,7 @@ Item {
 
     // 背景样式
     background: Shadow {
-      color: Theme.dark ? Qt.rgba(1,1,1,0.2) : Qt.rgba(0,0,0,0.6)  // 根据主题调整阴影颜色
+      color: Theme.isDark ? Qt.rgba(1,1,1,0.2) : Qt.rgba(0,0,0,0.6)  // 根据主题调整阴影颜色
       Rectangle {
         id: bg
         anchors.fill: parent
@@ -285,10 +285,10 @@ Item {
             width: parent.width - 16
             text: model.text || ""  // 显示文本
             color: {  // 根据状态和主题改变文本颜色
-              if((d.pressedIndex === index || isCurrent) && Theme.dark){
+              if((d.pressedIndex === index || isCurrent) && Theme.isDark){
                 return "black"
               }
-              if((d.pressedIndex === index || isCurrent) && !Theme.dark){
+              if((d.pressedIndex === index || isCurrent) && !Theme.isDark){
                 return "white"
               }
               return d.textColor
