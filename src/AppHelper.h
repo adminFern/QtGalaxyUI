@@ -6,8 +6,9 @@ class AppHelper : public QObject
 {
     Q_OBJECT
     Q_PROPERTY(bool isOSTheme READ isOSTheme NOTIFY themeChanged)
-    QML_NAMED_ELEMENT(AppHelper)
-    QML_UNCREATABLE("")
+
+
+    QML_ELEMENT
     QML_SINGLETON
 
 public:

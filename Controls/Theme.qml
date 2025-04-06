@@ -2,6 +2,12 @@ pragma Singleton
 import QtQuick
 import GalaxyUI
 QtObject  {
+
+    // 字体加载器
+      property FontLoader fontLoader: FontLoader {
+           source: "Font/FluentIcons.ttf"// 或你的实际路径
+      }
+
     // 枚举类型定义
     enum ModeType {
         Light = 0x0000,
@@ -14,7 +20,7 @@ QtObject  {
         return false
     }
     // 属性定义
-    property int themeType: Theme.ModeType.Light
+    property int themeType: Theme.ModeType.System
 
     property color itemDisabledColor: isDark? Qt.rgba(0.98,0.98,0.98,0.5):Qt.rgba(0.3,0.3,0.3,0.5)
     property color itemPressColor: isDark? Qt.rgba(0.98,0.98,0.98,0.9):Qt.rgba(0.3,0.3,0.3,0.9)
