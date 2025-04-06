@@ -1,2 +1,3 @@
 singleton FluentIcons 1.0 FluentIcons.qml
 singleton Theme 1.0 Theme.qml
+singleton QTextFont 1.0 QTextFont.qml

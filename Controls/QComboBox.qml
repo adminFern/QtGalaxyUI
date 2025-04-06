@@ -59,9 +59,16 @@ Item {
 
     // 定义颜色属性
         property color hoverColor: Theme.isDark ? "#80505050" : "#80EEEEEE" // 添加 80% 透明度
-        property color normalColor: Theme.isDark ? "#90606060" : "#90F8F8F8" // 添加 80% 透明度
+   // property color normalColor: Theme.isDark ? Qt.rgba(96, 96, 96,0.92) : Qt.rgba(248, 248, 248, 0.95)
+    property color normalColor: Theme.isDark ? Qt.rgba(0x60 / 255, 0x60 / 255, 0x60 / 255, 0.95)
+                                             : Qt.rgba(0xF8 / 255, 0xF8 / 255, 0xF8 / 255, 0.95)
+
+      //  property color normalColor: Theme.isDark ? "#90606060" : "#90F8F8F8" // 添加 80% 透明度
         property color pressedColor: Theme.isDark ? "#80404040" : "#80E5E5E5" // 添加 80% 透明度
-        property color borderColor: Theme.isDark ? "#80707070" : "#80DDDDDD" // 添加 80% 透明度
+        //property color borderColor: Theme.isDark ? "#80707070" : "#80DDDDDD" // 添加 80% 透明度
+       property color borderColor: Theme.isDark ? Qt.rgba(0x70 / 255, 0x70 / 255, 0x70 / 255, 1)
+                                                : Qt.rgba(0xDD / 255, 0xDD / 255, 0xDD / 255, 1)
+
         property color hoverBorderColor: Theme.isDark ? "#80808080" : "#80BFBFBF" // 添加 80% 透明度
         property color textColor: Theme.isDark ? "white" : "black"
 
