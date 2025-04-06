@@ -13,6 +13,7 @@ Rectangle {
     property alias buttonMinimized: btn_minimized
     property string winTitle
     property string winIcon
+    z:665
     width: {
         if(parent){
             return parent.width
@@ -25,7 +26,7 @@ Rectangle {
         id: d
         property var win: Window.window
         property int iconsize: 22
-        property int buttonWidth : 46
+        property int buttonWidth : 42
         property bool isRestore: win && (Window.Maximized === win.visibility || Window.FullScreen === win.visibility)
         property bool resizable: Window.window && !(win.height === win.maximumHeight && win.height === win.minimumHeight && win.width === win.maximumWidth && win.width === win.minimumWidth)
         function setHitTestVisible(id){

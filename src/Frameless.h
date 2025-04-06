@@ -17,6 +17,9 @@ class Frameless : public QQuickItem, QAbstractNativeEventFilter {
     Q_PROPERTY_AUTO(bool, fixSize)
     Q_PROPERTY_AUTO(bool, dark);
     Q_PROPERTY_AUTO(int, windowEffect);
+
+
+
     QML_ELEMENT
 
 public:

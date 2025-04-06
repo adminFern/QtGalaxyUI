@@ -7,7 +7,8 @@
 #include <QDateTime>
 #include <QTimer>
 
-
+#include <QPropertyAnimation>
+#include <QSettings>
 
 
 bool Frameless::containsCursorToItem(QQuickItem *item) {
@@ -22,6 +23,8 @@ bool Frameless::containsCursorToItem(QQuickItem *item) {
     return false;
 }
 
+
+
 Frameless::Frameless(QQuickItem *parent) : QQuickItem{parent} {
     m_fixSize = false;
     m_appbar = nullptr;
@@ -30,11 +33,18 @@ Frameless::Frameless(QQuickItem *parent) : QQuickItem{parent} {
     m_disabled = false;
     m_windowEffect = 0;
     m_isWindows11OrGreater = Tools::getInstance()->isWindows11OrGreater();
+
+
 }
 
 void Frameless::onDestruction() {
     QGuiApplication::instance()->removeNativeEventFilter(this);
+
+
 }
+
+
+
 
 void Frameless::componentComplete() {
     if (m_disabled) {
@@ -454,6 +464,8 @@ bool Frameless::setWindowDark(bool dark) {
     HWND hwnd = reinterpret_cast<HWND>(window()->winId());
     BOOL value = dark;
     return WindowEffect::dwmSetWindowAttribute(hwnd, 20, &value, sizeof(BOOL));
+
+
 #endif
     return false;
 }

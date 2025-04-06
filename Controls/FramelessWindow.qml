@@ -3,7 +3,7 @@ import QtQuick.Controls
 import GalaxyUI
 Window {
     id: control
-    property var initialItem //加载的布局内容
+    property string initialItem //加载的布局内容
     property alias containerItem: layout_container
     property alias framelessHelper: frameless
     property bool fitsAppBarWindows: false
@@ -50,6 +50,8 @@ Window {
         buttonMaximized: control.appBar.buttonMaximized
         dark:Theme.isDark
         windowEffect: control.windowEffect
+
+
     }
     //内容
     Item{

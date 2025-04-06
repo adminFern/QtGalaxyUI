@@ -32,6 +32,7 @@ set(RES_PATHS
 #资源文件
 set(RES_qml
    example/Main.qml
+   example/T_Content.qml
 )
 
 #收集到的文件列表将存储在ALL_SOURCE_FILES变量中

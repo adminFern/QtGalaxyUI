@@ -15,9 +15,12 @@ public:
     explicit AppHelper(QObject *parent = nullptr);
      ~AppHelper();  // 添加析构函数声明
     bool isOSTheme() const;
+    Q_INVOKABLE QString resolvedUrl(const QString &path);
 
 protected:
     bool eventFilter(QObject *watched, QEvent *event) override;
+     QQmlEngine *m_engine = nullptr;
+     QString m_baseUrl=nullptr;
 
 signals:
     void themeChanged(bool isDark);

@@ -2,51 +2,124 @@ import QtQuick
 import QtQuick.Controls
 import GalaxyUI
 import "../Controls"
-
+import QtQuick.Layouts
 FramelessWindow {
-    id: root
-    width: 650
-    height: 480
-    visible: true
-    title: qsTr("流畅水波纹主题切换演示")
-    fixSize:true
-   // color: Theme.isDark?"#F2171717":"#F0FFFFFF"
-    Component.onCompleted: {
+   id: window
+  width: 1000
+  height: 800
+  visible: true
+  initialItem:"../example/T_Content.qml"
 
-        console.log(Theme.isDark)
+
+  Row{
+    anchors.centerIn: parent
+    spacing: 3
+    GaIconButton{
+      iconSource:Icons.Light
+      iconSize: 22
+      text: "正常"
+      display: Button.TextBesideIcon
+      onClicked: {
+        window.windowEffect=EffectType.Normal
+      }
+    }
+    GaIconButton{
+      iconSource:Icons.MapLayers
+      display: Button.TextBesideIcon
+      iconSize: 22
+      text: "云母"
+      onClicked: {
+        window.windowEffect=EffectType.Mica
+      }
+    }
+    GaIconButton{
+      iconSource:Icons.Shuffle
+      display: Button.TextBesideIcon
+      iconSize: 22
+      text: "深度云母"
+      onClicked: {
+        window.windowEffect=EffectType.Mica_alt
+      }
+    }
+    GaIconButton{
+      iconSource:Icons.NetworkTower
+      display: Button.TextBesideIcon
+      iconSize: 22
+      text: "亚克力"
+      onClicked: {
+        window.windowEffect=EffectType.Acrylic
+      }
     }
 
-    Column{
-        spacing: 6
-        padding: 5
-        Row{
-            spacing: 6
-            padding: 5
-            GaIconButton{
-                iconSource: Icons.Bluetooth
-            }
-            GaIconButton{
-                iconSource: Icons.More
-            }
-        }
-        GaIconButton{
-            display: Button.TextBesideIcon
-            iconSource: Icons.Video
-            text: "深色模式"
-            onClicked: {
-              Theme.themeType=Theme.ModeType.Dark
-            }
-        }
-        GaIconButton{
-            display: Button.TextBesideIcon
-            iconSource: Icons.Zoom
-            text: "浅色模式"
-            onClicked: {
-              Theme.themeType=Theme.ModeType.Light
-            }
-        }
+  }
+  appBar: AppBar{
+   z:66
+    winTitle:"东莞证券有限公司"
+    winIcon: "../favicon.ico"
+    action: RowLayout{
+      GaIconButton{
+        id: btn_dark
+        implicitWidth: 42
+        padding: 0
+        radius: 0
+        iconSource:Theme.isDark?Icons.Brightness:Icons.QuietHours
+        iconSize: 18
+       onClicked: {
+          handleDarkChanged(this)
+       }
+      }
     }
+  }
 
-
-
+//动画
+  Component {
+      id: comp_reveal
+      CircularReveal {
+          id: reveal
+          target: window.contentItem
+          anchors.fill: parent
+          onAnimationFinished: {
+              loader_reveal.sourceComponent = undefined
+          }
+          onImageChanged: {
+              changeDark()
+          }
+      }
+  }
+  AutoLoader {
+      id: loader_reveal
+      anchors.fill: parent
+      z: 65535
+  }
+  function distance(x1, y1, x2, y2) {
+      return Math.sqrt((x1 - x2) * (x1 - x2) + (y1 - y2) * (y1 - y2))
+  }
+  function handleDarkChanged(button) {
+      if (loader_reveal.sourceComponent) {
+          return
+      }
+      loader_reveal.sourceComponent = comp_reveal
+      var target = window.contentItem
+      var pos = button.mapToItem(target, 0, 0)
+      var centerX = pos.x + button.width / 2
+      var centerY = pos.y + button.height / 2
+      var radius = Math.max(distance(centerX, centerY, 0,
+                                     0), distance(centerX, centerY,
+                                                  target.width, 0),
+                            distance(centerX, centerY, 0,
+                                     target.height), distance(
+                                centerX, centerY,
+                                target.width, target.height))
+      var reveal = loader_reveal.item
+      reveal.start(reveal.width * Screen.devicePixelRatio,
+                   reveal.height * Screen.devicePixelRatio,
+                   Qt.point(centerX, centerY), radius, Theme.dark)
+  }
+  function changeDark() {
+      if (Theme.isDark) {
+          Theme.themeType =Theme.ModeType.Light
+      } else {
+          Theme.themeType =Theme.ModeType.Dark
+      }
+  }
 }
