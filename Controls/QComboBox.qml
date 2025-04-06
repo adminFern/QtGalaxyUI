@@ -59,7 +59,7 @@ Item {
 
     // 定义颜色属性
         property color hoverColor: Theme.isDark ? "#80505050" : "#80EEEEEE" // 添加 80% 透明度
-        property color normalColor: Theme.isDark ? "#50606060" : "#50F8F8F8" // 添加 80% 透明度
+        property color normalColor: Theme.isDark ? "#90606060" : "#90F8F8F8" // 添加 80% 透明度
         property color pressedColor: Theme.isDark ? "#80404040" : "#80E5E5E5" // 添加 80% 透明度
         property color borderColor: Theme.isDark ? "#80707070" : "#80DDDDDD" // 添加 80% 透明度
         property color hoverBorderColor: Theme.isDark ? "#80808080" : "#80BFBFBF" // 添加 80% 透明度
