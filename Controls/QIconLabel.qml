@@ -9,17 +9,14 @@ Item {
     property string text
     property font font: QTextFont.body
     property var icosource
-    property color color: "black"//enabled ? control.R.theme.res.itemNormalColor : control.R.theme.res.itemDisabledColor
-
+    property color color: enabled? Theme.textColor:Theme.itemDisabledColor
     property real topPadding : 0
     property real leftPadding : 0
     property real rightPadding : 0
     property real bottomPadding : 0
-
     implicitWidth: loader.width
     implicitHeight: loader.height
     AutoLoader{
-
         id: loader
         anchors{
             verticalCenter: (control.alignment & Qt.AlignVCenter) ? control.verticalCenter : undefined

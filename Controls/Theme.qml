@@ -20,6 +20,7 @@ QtObject  {
     property color itemPressColor: isDark? Qt.rgba(0.98,0.98,0.98,0.9):Qt.rgba(0.3,0.3,0.3,0.9)
     property color itemHoverColor: isDark? Qt.rgba(0.98,0.98,0.98,0.6):Qt.rgba(0.3,0.3,0.3,0.6)
     property color itemNormalColor: isDark? Qt.rgba(0.98,0.98,0.98,0.6):Qt.rgba(0.3,0.3,0.3,0.6)
+    property color textColor:  isDark?"white":"black"
 
 
 }
