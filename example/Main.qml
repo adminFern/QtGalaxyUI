@@ -4,11 +4,32 @@ import GalaxyUI
 import "../Controls"
 import QtQuick.Layouts
 FramelessWindow {
-   id: window
+  id: window
   width: 1000
-  height: 800
+  height: 700
   visible: true
   initialItem:"../example/T_Content.qml"
+
+
+  Component {
+    id: comp_reveal
+    CircularReveal {
+      id: reveal
+      target: window.contentItem
+      anchors.fill: parent
+      onAnimationFinished: {
+        loader_reveal.sourceComponent = undefined
+      }
+      onImageChanged: {
+        changeDark()
+      }
+    }
+  }
+  AutoLoader {
+    id: loader_reveal
+    anchors.fill: parent
+    z: 65535
+  }
 
 
   Row{
@@ -53,7 +74,7 @@ FramelessWindow {
 
   }
   appBar: AppBar{
-   z:66
+
     winTitle:"东莞证券有限公司"
     winIcon: "../favicon.ico"
     action: RowLayout{
@@ -64,62 +85,44 @@ FramelessWindow {
         radius: 0
         iconSource:Theme.isDark?Icons.Brightness:Icons.QuietHours
         iconSize: 18
-       onClicked: {
-          handleDarkChanged(this)
-       }
+        onClicked: (mouse) =>{
+
+         handleDarkChanged(this)
+
+        }
       }
     }
   }
 
-//动画
-  Component {
-      id: comp_reveal
-      CircularReveal {
-          id: reveal
-          target: window.contentItem
-          anchors.fill: parent
-          onAnimationFinished: {
-              loader_reveal.sourceComponent = undefined
-          }
-          onImageChanged: {
-              changeDark()
-          }
-      }
-  }
-  AutoLoader {
-      id: loader_reveal
-      anchors.fill: parent
-      z: 65535
+  function handleDarkChanged(button) {
+    if (loader_reveal.sourceComponent) {
+      return
+    }
+    loader_reveal.sourceComponent = comp_reveal
+    var target = window.contentItem
+    var pos = button.mapToItem(target, 0, 0)
+    var centerX = pos.x + button.width / 2
+    var centerY = pos.y + button.height / 2
+    var radius = Math.max(distance(centerX, centerY, 0,
+                                   0), distance(centerX, centerY,
+                                                target.width, 0),
+                          distance(centerX, centerY, 0,
+                                   target.height), distance(
+                            centerX, centerY,
+                            target.width, target.height))
+    var reveal = loader_reveal.item
+    reveal.start(reveal.width * Screen.devicePixelRatio,
+                 reveal.height * Screen.devicePixelRatio,
+                 Qt.point(centerX, centerY), radius, Theme.isDark)
   }
   function distance(x1, y1, x2, y2) {
-      return Math.sqrt((x1 - x2) * (x1 - x2) + (y1 - y2) * (y1 - y2))
-  }
-  function handleDarkChanged(button) {
-      if (loader_reveal.sourceComponent) {
-          return
-      }
-      loader_reveal.sourceComponent = comp_reveal
-      var target = window.contentItem
-      var pos = button.mapToItem(target, 0, 0)
-      var centerX = pos.x + button.width / 2
-      var centerY = pos.y + button.height / 2
-      var radius = Math.max(distance(centerX, centerY, 0,
-                                     0), distance(centerX, centerY,
-                                                  target.width, 0),
-                            distance(centerX, centerY, 0,
-                                     target.height), distance(
-                                centerX, centerY,
-                                target.width, target.height))
-      var reveal = loader_reveal.item
-      reveal.start(reveal.width * Screen.devicePixelRatio,
-                   reveal.height * Screen.devicePixelRatio,
-                   Qt.point(centerX, centerY), radius, Theme.dark)
+    return Math.sqrt((x1 - x2) * (x1 - x2) + (y1 - y2) * (y1 - y2))
   }
   function changeDark() {
-      if (Theme.isDark) {
-          Theme.themeType =Theme.ModeType.Light
-      } else {
-          Theme.themeType =Theme.ModeType.Dark
-      }
+    if (Theme.isDark) {
+      Theme.themeType = Theme.ModeType.Light
+    } else {
+      Theme.themeType = Theme.ModeType.Dark
+    }
   }
 }

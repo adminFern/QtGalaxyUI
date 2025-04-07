@@ -33,6 +33,7 @@ set(RES_PATHS
 set(RES_qml
    example/Main.qml
    example/T_Content.qml
+   #example/CircularRevea.qml
 )
 
 #收集到的文件列表将存储在ALL_SOURCE_FILES变量中

@@ -14,6 +14,8 @@ Window {
         showMaximize: !control.fixSize
     }
 
+
+
     property int __margins: 0
     property Component background: comp_background
     property int windowEffect:EffectType.Normal
