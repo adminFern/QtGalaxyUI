@@ -2,19 +2,7 @@ import QtQuick
 import QtQuick.Controls
 import GalaxyUI
 
-/**
- * 自定义组合框控件
- *
- * 一个高度可定制的下拉选择器组件，具有以下特性：
- * - 基于数据模型的绑定
- * - 可定制的外观（颜色、尺寸、图标）
- * - 平滑的动画效果
- * - 完整的事件信号系统
- * - 支持键盘/鼠标交互
- * - 带动态滚动条的可滚动内容
- * - 主题支持（深色/浅色模式）
- * - 全面的API接口
- */
+
 
 Item {
   id: root
@@ -49,29 +37,12 @@ Item {
     id: d  // 私有数据对象
     property int radius: 4  // 圆角半径
     property int borderWidth: 1  // 边框宽度
-    property int dropDownHeight: Math.min(visibleItemCount * itemHeight, model.count * itemHeight) + 6 // 下拉框高度计算
+    property int dropDownHeight: Math.min(visibleItemCount * itemHeight+11, model.count * itemHeight+8)  // 下拉框高度计算
     property bool showScrollBar: model.count * itemHeight > dropDownHeight  // 是否需要显示滚动条
     property int pressedIndex: -1  // 当前被按下的项索引
-
     // 指示器颜色
-    property color indicatorHover: Theme.isDark? Qt.rgba(1, 1, 1, 0.06):Qt.rgba(0, 0, 0, 0.06)
+    property color indicatorHover: Theme.isDark? Qt.rgba(1, 1, 1, 0.06):Qt.rgba(0, 0, 0, 0.03)
     property color indicatorPressed: Theme.isDark?Qt.rgba(1, 1, 1, 0.1):Qt.rgba(0, 0, 0, 0.1)
-
-    // 定义颜色属性
-        property color hoverColor: Theme.isDark ? "#80505050" : "#80EEEEEE" // 添加 80% 透明度
-   // property color normalColor: Theme.isDark ? Qt.rgba(96, 96, 96,0.92) : Qt.rgba(248, 248, 248, 0.95)
-    property color normalColor: Theme.isDark ? Qt.rgba(0x60 / 255, 0x60 / 255, 0x60 / 255, 0.3)
-                                             : Qt.rgba(0xF8 / 255, 0xF8 / 255, 0xF8 / 255, 0.3)
-
-      //  property color normalColor: Theme.isDark ? "#90606060" : "#90F8F8F8" // 添加 80% 透明度
-        property color pressedColor: Theme.isDark ? "#80404040" : "#80E5E5E5" // 添加 80% 透明度
-        //property color borderColor: Theme.isDark ? "#80707070" : "#80DDDDDD" // 添加 80% 透明度
-       property color borderColor: Theme.isDark ? Qt.rgba(0x70 / 255, 0x70 / 255, 0x70 / 255, 1)
-                                                : Qt.rgba(0xDD / 255, 0xDD / 255, 0xDD / 255, 1)
-
-        property color hoverBorderColor: Theme.isDark ? "#80808080" : "#80BFBFBF" // 添加 80% 透明度
-        property color textColor: Theme.isDark ? "white" : "black"
-
     // 判断当前选中项是否有图标
     function hasIcon() {
       if (root.currentIndex < 0) return false
@@ -87,8 +58,13 @@ Item {
     height: root.height
     radius: d.radius
     border.width: d.borderWidth
-    color: mainMouseArea.containsMouse ? d.hoverColor : d.normalColor  // 根据悬停状态改变背景色
-    border.color: mainMouseArea.containsMouse ? d.hoverBorderColor : d.borderColor  // 根据悬停状态改变边框色
+    color: mainMouseArea.pressed ? Theme.itemPressColor :
+                                   mainMouseArea.containsMouse ? Theme.itemHoverColor :
+                                                                 Theme.itemNormalColor
+    border.color:mainMouseArea.pressed ? Theme.borderPresslColor :
+                                         mainMouseArea.containsMouse ? Theme.borderHoverlColor :
+                                                                       Theme.borderNormalColor
+
 
     // 当前选中项的图标
     GaIcon {
@@ -96,7 +72,7 @@ Item {
       anchors.verticalCenter: comboBox.verticalCenter
       anchors.left: comboBox.left
       id: comboIconLoader
-      iconColor: d.textColor  // 图标颜色随主题变化
+      iconColor: Theme.textColor  // 图标颜色随主题变化
       iconSize: comboBox.height*0.5  // 图标大小为高度的一半
       iconSource: {  // 动态获取当前选中项的图标
         if (root.currentIndex < 0) return 0
@@ -110,7 +86,7 @@ Item {
     // 当前选中项的文本
     Text {
       id: displayText
-      color:d.textColor // 文本颜色随主题变化
+      color:Theme.textColor  // 文本颜色随主题变化
       anchors {
         left: d.hasIcon() ? comboIconLoader.right : parent.left
         leftMargin: 8
@@ -141,7 +117,7 @@ Item {
       // 下拉箭头图标
       GaIcon {
         id: icon
-        iconColor:d.textColor
+        iconColor:Theme.textColor
         iconSize: parent.height / 2
         anchors.centerIn: parent
         iconSource:Icons.ChevronDown  // 使用预定义的下拉图标
@@ -216,8 +192,15 @@ Item {
         id: bg
         anchors.fill: parent
         radius: d.radius
-        color: d.normalColor  // 背景色随主题变化
-        border.color: d.borderColor  // 边框色随主题变化
+        color:mainMouseArea.pressed ? Theme.itemPressColor :
+                                        mainMouseArea.containsMouse ? Theme.itemHoverColor :
+                                                                      Theme.itemNormalColor
+        border.color:mainMouseArea.pressed ? Theme.borderPresslColor :
+                                              mainMouseArea.containsMouse ? Theme.borderHoverlColor :
+                                                                            Theme.borderNormalColor
+
+
+
         border.width: 1
       }
     }
@@ -272,7 +255,7 @@ Item {
             sourceComponent: GaIcon {
               iconSource: model.icon || 0  // 图标资源
               iconSize: Math.min(iconLoader.width, iconLoader.height)  // 图标大小
-              iconColor:  d.textColor  // 图标颜色随主题变化
+              iconColor:  Theme.textColor   // 图标颜色随主题变化
             }
           }
 
@@ -298,7 +281,7 @@ Item {
               if((d.pressedIndex === index || isCurrent) && !Theme.isDark){
                 return "white"
               }
-              return d.textColor
+              return Theme.textColor
             }
             elide: Text.ElideRight  // 文本过长时显示省略号
           }
@@ -349,7 +332,7 @@ Item {
             radius: width / 2  // 圆角
             color: handleArea.pressed ? Qt.rgba(0.6, 0.6, 0.6, 0.8) :  // 按下状态
                                         handleArea.containsMouse ? Qt.rgba(0.6, 0.6, 0.6, 0.5) : // 悬停状态
-                                                                   Qt.rgba(0.6, 0.6, 0.6, 0.2)  // 默认状态
+                                                                   Qt.rgba(0.6, 0.6, 0.6, 0.1)  // 默认状态
 
             // 滑块鼠标区域
             MouseArea {

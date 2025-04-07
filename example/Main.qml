@@ -75,7 +75,7 @@ FramelessWindow {
   }
   appBar: AppBar{
 
-    winTitle:"东莞证券有限公司"
+    winTitle:"中华人们共和国"
     winIcon: "../favicon.ico"
     action: RowLayout{
       GaIconButton{

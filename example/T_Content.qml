@@ -41,10 +41,10 @@ Item {
                            ];
 
         // 图标选项（随机选择）
-        const icons = [Icons.Wifi, Icons.Connect, Icons.Cloud, Icons.Settings, Icons.Home, 0]; // 0 表示无图标
+        const icons = [Icons.Wifi, Icons.Connect, Icons.Cloud, Icons.Settings, Icons.Home,Icons.EMI,Icons.VPN,Icons.Phone, 0]; // 0 表示无图标
 
         // 生成 10,000 条数据
-        for (let i = 0; i < 10000; i++) {
+        for (let i = 0; i < 300; i++) {
             // 随机选择数据源（0: 日常用语, 1: 全球公司, 2: 中国公司）
             const dataSource = Math.floor(Math.random() * 3);
             let text;

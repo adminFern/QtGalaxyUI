@@ -22,10 +22,20 @@ QtObject  {
     // 属性定义
     property int themeType: Theme.ModeType.System
 
-    property color itemDisabledColor: isDark? Qt.rgba(0.98,0.98,0.98,0.5):Qt.rgba(0.3,0.3,0.3,0.5)
-    property color itemPressColor: isDark? Qt.rgba(0.98,0.98,0.98,0.9):Qt.rgba(0.3,0.3,0.3,0.9)
-    property color itemHoverColor: isDark? Qt.rgba(0.98,0.98,0.98,0.6):Qt.rgba(0.3,0.3,0.3,0.6)
-    property color itemNormalColor: isDark? Qt.rgba(0.98,0.98,0.98,0.6):Qt.rgba(0.3,0.3,0.3,0.6)
+    property color itemDisabledColor: isDark? Qt.rgba(1,1,1,0.5):Qt.rgba(0,0,0,0.5)
+
+    property color itemPressColor: isDark? Qt.rgba(1, 1, 1, 0.08):Qt.rgba(0, 0, 0, 0.062)
+
+    property color itemHoverColor: isDark? Qt.rgba(1, 1, 1, 0.05):Qt.rgba(0, 0, 0, 0.05)
+
+    property color itemNormalColor: isDark? Qt.rgba(1, 1, 1, 0.03):Qt.rgba(0, 0, 0, 0.03)
+
+
+    //边框颜色
+     property color borderNormalColor: isDark?  Qt.rgba(1, 1, 1, 0.13):Qt.rgba(0, 0, 0, 0.13)
+     property color borderHoverlColor: isDark?  Qt.rgba(1, 1, 1, 0.2):Qt.rgba(0, 0, 0, 0.2)
+     property color borderPresslColor: isDark? Qt.rgba(1, 1, 1, 0.3):Qt.rgba(0, 0, 0, 0.3)
+    //文本颜色
     property color textColor:  isDark?"white":"black"
 
 
