@@ -106,6 +106,11 @@ Item {
                 generateRandomData()
             }
         }
+        GaButton{
+        text: "尺寸测试"
+        iconSource: Icons.ZoomOut
+
+        }
     }
 
 }

@@ -67,7 +67,7 @@ Rectangle {
             Label{
                 text: control.winTitle
                 elide: Qt.ElideRight
-                font: TextFont.body
+                font: TextFont.title
                 anchors.verticalCenter: parent.verticalCenter
                 color: Theme.isDark ? "white" :"black"
             }

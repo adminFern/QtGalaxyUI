@@ -75,7 +75,7 @@ FramelessWindow {
   }
   appBar: AppBar{
 
-    winTitle:"中华人们共和国"
+    winTitle:"中华人民共和国"
     winIcon: "../favicon.ico"
     action: RowLayout{
       GaIconButton{
