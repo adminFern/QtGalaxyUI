@@ -7,7 +7,7 @@ import GalaxyUI
 T.ScrollBar{
     id: control
     property color color : Theme.isDark ? Qt.rgba(159/255,159/255,159/255,0.5) : Qt.rgba(138/255,138/255,138/255,0.5)
-    property color pressedColor: Theme.isDark ? Qt.darker(color,1.2) : Qt.lighter(color,1.2)
+    property color pressedColor: Theme.isDark ? Qt.darker(color,1.1) : Qt.lighter(color,1.1)
     implicitWidth: Math.max(implicitBackgroundWidth + leftInset + rightInset,
                             implicitContentWidth + leftPadding + rightPadding)
     implicitHeight: Math.max(implicitBackgroundHeight + topInset + bottomInset,

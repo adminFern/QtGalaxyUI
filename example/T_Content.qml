@@ -44,7 +44,7 @@ Item {
         const icons = [Icons.Wifi, Icons.Connect, Icons.Cloud, Icons.Settings, Icons.Home,Icons.EMI,Icons.VPN,Icons.Phone, 0]; // 0 表示无图标
 
         // 生成 10,000 条数据
-        for (let i = 0; i < 300; i++) {
+        for (let i = 0; i < 3; i++) {
             // 随机选择数据源（0: 日常用语, 1: 全球公司, 2: 中国公司）
             const dataSource = Math.floor(Math.random() * 3);
             let text;
@@ -69,54 +69,104 @@ Item {
     }
 
 
+    GComboBox {
 
+        x:10
+        y:10
+        id: basicCombo
 
+        model: ListModel {
+            ListElement { text: "选项1" }
+            ListElement { text: "选项2" }
+            ListElement { text: "选项3" }
+            ListElement { text: "选项4" }
+             ListElement { text: "选项4" }
+              ListElement { text: "选项4" }
+               ListElement { text: "选项4" }
+                ListElement { text: "选项4" }
+                 ListElement { text: "选项4" }
+                  ListElement { text: "选项4" }
+                   ListElement { text: "选项4" }
+                    ListElement { text: "选项4" }
+                     ListElement { text: "选项4" }
+                      ListElement { text: "选项4" }
+                       ListElement { text: "选项4" }
+                        ListElement { text: "选项4" }
+                         ListElement { text: "选项4" }
+                          ListElement { text: "选项4" }
+                          ListElement { text: "选项4" }
 
+                          ListElement { text: "选项4" }
+                          ListElement { text: "选项4" }
+                          ListElement { text: "选项4" }
+                          ListElement { text: "选项4" }
+                          ListElement { text: "选项4" }
+                          ListElement { text: "选项4" }
+                          ListElement { text: "选项4" }
+                          ListElement { text: "选项4" }
 
-    Row{
-        leftPadding: 5
-        spacing: 3
-        GaIconButton{
-            iconSource: Icons.Bluetooth
-        }
-        GaIconButton{
-            iconSource: Icons.More
-        }
-        GaIconButton{
-            display: Button.TextBesideIcon
-            iconSource: Icons.Video
-            text: "深色模式"
-            onClicked: {
-                Theme.themeType=Theme.ModeType.Dark
-            }
-        }
-        GaIconButton{
-            display: Button.TextBesideIcon
-            iconSource: Icons.Zoom
-            text: "浅色模式"
-            onClicked: {
-                Theme.themeType=Theme.ModeType.Light
-            }
-        }
-        GaComboBox{
-            id:mboBox
-            model: randomDataModel
-        }
-        GaIconButton{
-            display: Button.TextBesideIcon
-            iconSource: Icons.ZoomOut
-            text: "添加ComboBox数据"
-            onClicked: {
-                mboBox.clearAll()
-                randomDataModel.clear()
-                generateRandomData()
-            }
-        }
-        GaButton{
-        text: "尺寸测试"
-        iconSource: Icons.ZoomOut
+                          ListElement { text: "选项4" }
 
+                           ListElement { text: "选项4" }
+                            ListElement { text: "选项4" }
+                             ListElement { text: "选项4" }
+                              ListElement { text: "选项4" }
+
+                               ListElement { text: "选项4" }
+                                ListElement { text: "选项4" }
+
+                                 ListElement { text: "选项4" }
+                                  ListElement { text: "选项4" }
+
+                                   ListElement { text: "选项4" }
         }
+        onActivated: console.log("选中了:", currentIndex, model.get(currentIndex).text)
     }
 
+
+
+//     Row{
+//         leftPadding: 5
+//         spacing: 3
+//         GaIconButton{
+//             iconSource: Icons.Bluetooth
+//         }
+//         GaIconButton{
+//             iconSource: Icons.More
+//         }
+//         GaIconButton{
+//             display: Button.TextBesideIcon
+//             iconSource: Icons.Video
+//             text: "深色模式"
+//             onClicked: {
+//                 Theme.themeType=Theme.ModeType.Dark
+//             }
+//         }
+//         GaIconButton{
+//             display: Button.TextBesideIcon
+//             iconSource: Icons.Zoom
+//             text: "浅色模式"
+//             onClicked: {
+//                 Theme.themeType=Theme.ModeType.Light
+//             }
+//         }
+
+//     }
+//         GaIconButton{
+//             display: Button.TextBesideIcon
+//             iconSource: Icons.ZoomOut
+//             text: "添加ComboBox数据"
+//             onClicked: {
+//                 mboBox.clearAll()
+//                 randomDataModel.clear()
+//                 generateRandomData()
+//             }
+//         }
+//         GaButton{
+//         text: "尺寸测试"
+//         iconSource: Icons.ZoomOut
+
+//         }
+//     }
+// }
 }
