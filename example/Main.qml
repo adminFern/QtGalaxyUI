@@ -73,6 +73,18 @@ FramelessWindow {
     }
 
   }
+
+
+
+  // ScrollBar.vertical: GaScrollBar{
+  //     id: scrollbar_header
+  // }
+  // ScrollBar.horizontal: GaScrollBar{
+  //     id: scrollbar_header
+  // }
+
+
+
   appBar: AppBar{
 
     winTitle:"中华人民共和国"

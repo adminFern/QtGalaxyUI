@@ -67,6 +67,12 @@ Item {
             randomDataModel.append({ text: text, icon: icon });
         }
     }
+
+
+
+
+
+
     Row{
         leftPadding: 5
         spacing: 3

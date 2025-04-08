@@ -224,7 +224,7 @@ Item {
         cacheBuffer: Math.min(400, root.model.count * root.itemHeight / 2)  // 缓存区域
         displayMarginBeginning: Math.min(200, root.model.count * root.itemHeight / 3)  // 顶部显示边距
         displayMarginEnd: Math.min(200, root.model.count * root.itemHeight / 3)  // 底部显示边距
-
+         ScrollBar.vertical: GaScrollBar {}
         // 选项项代理
         delegate: Rectangle {
           id: delegateItem
@@ -307,55 +307,56 @@ Item {
           }
         }
 
-        // 滚动条实现
-        Rectangle {
-          id: scrollBar
-          visible: d.showScrollBar  // 根据需要显示滚动条
-          width: 6  // 滚动条宽度
-          height: listView.height  // 滚动条高度
-          anchors.right: listView.right  // 右侧对齐
-          color: "transparent"  // 背景透明
-          property real sizeRatio: listView.visibleArea.heightRatio  // 滚动条大小比例
 
-          // 滚动条滑块
-          Rectangle {
-            id: handle
-            width: (handleArea.containsMouse || handleArea.pressed) ? 6 : 2  // 悬停/按下时变宽
-            height: Math.max(30, listView.height * scrollBar.sizeRatio)  // 最小高度30
-            x: (handleArea.containsMouse || handleArea.pressed) ? 0 : 2  // 悬停/按下时左对齐
-            y: {  // 计算滑块位置
-              if (handleArea.pressed) return y
-              var contentHeight = listView.contentHeight - listView.height
-              if (contentHeight <= 0) return 0
-              return (scrollBar.height - height) * (listView.contentY / contentHeight)
-            }
-            radius: width / 2  // 圆角
-            color: handleArea.pressed ? Qt.rgba(0.6, 0.6, 0.6, 0.8) :  // 按下状态
-                                        handleArea.containsMouse ? Qt.rgba(0.6, 0.6, 0.6, 0.5) : // 悬停状态
-                                                                   Qt.rgba(0.6, 0.6, 0.6, 0.1)  // 默认状态
+        // // 滚动条实现
+        // Rectangle {
+        //   id: scrollBar
+        //   visible: d.showScrollBar  // 根据需要显示滚动条
+        //   width: 6  // 滚动条宽度
+        //   height: listView.height  // 滚动条高度
+        //   anchors.right: listView.right  // 右侧对齐
+        //   color: "transparent"  // 背景透明
+        //   property real sizeRatio: listView.visibleArea.heightRatio  // 滚动条大小比例
 
-            // 滑块鼠标区域
-            MouseArea {
-              id: handleArea
-              anchors.fill: parent
-              drag.target: parent  // 启用拖动
-              drag.axis: Drag.YAxis  // 垂直拖动
-              drag.minimumY: 0  // 最小Y位置
-              drag.maximumY: scrollBar.height - handle.height  // 最大Y位置
-              hoverEnabled: true  // 启用悬停检测
-              cursorShape: containsMouse ? Qt.PointingHandCursor : Qt.ArrowCursor  // 光标形状
+        //   // 滚动条滑块
+        //   Rectangle {
+        //     id: handle
+        //     width: (handleArea.containsMouse || handleArea.pressed) ? 6 : 2  // 悬停/按下时变宽
+        //     height: Math.max(30, listView.height * scrollBar.sizeRatio)  // 最小高度30
+        //     x: (handleArea.containsMouse || handleArea.pressed) ? 0 : 2  // 悬停/按下时左对齐
+        //     y: {  // 计算滑块位置
+        //       if (handleArea.pressed) return y
+        //       var contentHeight = listView.contentHeight - listView.height
+        //       if (contentHeight <= 0) return 0
+        //       return (scrollBar.height - height) * (listView.contentY / contentHeight)
+        //     }
+        //     radius: width / 2  // 圆角
+        //     color: handleArea.pressed ? Qt.rgba(0.6, 0.6, 0.6, 0.8) :  // 按下状态
+        //                                 handleArea.containsMouse ? Qt.rgba(0.6, 0.6, 0.6, 0.5) : // 悬停状态
+        //                                                            Qt.rgba(0.6, 0.6, 0.6, 0.1)  // 默认状态
 
-              // 拖动时更新列表位置
-              onPositionChanged: {
-                if (pressed) {
-                  var contentHeight = listView.contentHeight - listView.height
-                  var ratio = handle.y / (scrollBar.height - handle.height)
-                  listView.contentY = ratio * contentHeight
-                }
-              }
-            }
-          }
-        }
+        //     // 滑块鼠标区域
+        //     MouseArea {
+        //       id: handleArea
+        //       anchors.fill: parent
+        //       drag.target: parent  // 启用拖动
+        //       drag.axis: Drag.YAxis  // 垂直拖动
+        //       drag.minimumY: 0  // 最小Y位置
+        //       drag.maximumY: scrollBar.height - handle.height  // 最大Y位置
+        //       hoverEnabled: true  // 启用悬停检测
+        //       cursorShape: containsMouse ? Qt.PointingHandCursor : Qt.ArrowCursor  // 光标形状
+
+        //       // 拖动时更新列表位置
+        //       onPositionChanged: {
+        //         if (pressed) {
+        //           var contentHeight = listView.contentHeight - listView.height
+        //           var ratio = handle.y / (scrollBar.height - handle.height)
+        //           listView.contentY = ratio * contentHeight
+        //         }
+        //       }
+        //     }
+        //   }
+        // }
       }
     }
   }

@@ -9,7 +9,7 @@ Button {
     property int spacing_: 1
     property int radius: 4
     property int iconSize: 20
-    property int iconSource
+    property int iconSource:-1
     property color iconColor: Theme.textColor
     property color highlightedcolor: "indianred"
 
@@ -24,9 +24,9 @@ Button {
     QtObject {
         id: d
         // 颜色配置
-        property color pressedColor: Theme.isDark ? Qt.rgba(1,1,1,0.2) : Qt.rgba(0,0,0,0.2)
-        property color hoveredColor: Theme.isDark ? Qt.rgba(1,1,1,0.15) : Qt.rgba(0,0,0,0.15)
-        property color normalColor: Theme.isDark ? Qt.rgba(1,1,1,0.1) : Qt.rgba(0,0,0,0.1)
+        property color pressedColor: Theme.isDark? Qt.rgba(1, 1, 1, 0.08):Qt.rgba(0, 0, 0, 0.062)
+        property color hoveredColor: Theme.isDark? Qt.rgba(1, 1, 1, 0.05):Qt.rgba(0, 0, 0, 0.05)
+        property color normalColor: Theme.isDark? Qt.rgba(1, 1, 1, 0.03):Qt.rgba(0, 0, 0, 0.03)
         property color borderPresslColor: Theme.isDark ? Qt.rgba(1,1,1,0.35) : Qt.rgba(0,0,0,0.35)
         property color borderHoverlColor: Theme.isDark ? Qt.rgba(1,1,1,0.25) : Qt.rgba(0,0,0,0.25)
         property color borderNormalColor: Theme.isDark ? Qt.rgba(1,1,1,0.18) : Qt.rgba(0,0,0,0.18)
