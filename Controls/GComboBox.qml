@@ -22,10 +22,6 @@ T.ComboBox {
     // 自定义状态属性
 
 
-    property bool bgHovered: false
-    property bool bgPressed: false
-    property bool indicatorActive: false
-
     // -------------------- 私有属性 --------------------
     QtObject {
         id: d
@@ -39,13 +35,12 @@ T.ComboBox {
 
         property int animationDuration: 300  // 动画持续时间(毫秒)
 
-              property bool isIndicatorArea: false
 
 
 
         // 鼠标位置状态
-             property bool isInBackground: false
-             property bool isInIndicator: false
+        property bool isInBackground: false
+        property bool isInIndicator: false
 
     }
 
@@ -60,35 +55,24 @@ T.ComboBox {
         radius: d.radius
         border.width: d.borderWidth
 
-        // color:root.indicatorActive ? "transparent" :
-        //                              root.bgPressed ? Theme.itemPressColor :
-        //                                               root.bgHovered ? Theme.itemHoverColor : "transparent"
-
-
-        // color: root.indicatorActive ? "transparent" :
-        //                              root.bgPressed ? Theme.itemPressColor :
-        //                                               root.bgHovered ? Theme.itemHoverColor : "transparent"
-
-
         color: {
-              if (d.isInIndicator) {
-                  return "transparent" // 鼠标在指示器时背景透明
-              } else if (mouseArea.pressed && d.isInBackground) {
-                  return Theme.itemPressColor // 背景按下状态
-              } else if (d.isInBackground) {
-                  return Theme.itemHoverColor // 背景悬停状态
-              } else {
-                  return "transparent" // 默认透明
-              }
-          }
-
+            if (d.isInIndicator) {
+                return "transparent" // 鼠标在指示器时背景透明
+            } else if (mouseArea.pressed && d.isInBackground) {
+                return Theme.itemPressColor // 背景按下状态
+            } else if (d.isInBackground) {
+                return Theme.itemHoverColor // 背景悬停状态
+            } else {
+                return "transparent" // 默认透明
+            }
+        }
 
         border.color: root.down ? Theme.borderPresslColor :
                                   root.hovered ? Theme.borderHoverlColor :
                                                  Theme.borderNormalColor
 
 
-
+        Behavior on color { ColorAnimation { duration: d.animationDuration } }
     }
 
 
@@ -106,27 +90,19 @@ T.ComboBox {
             rightMargin: 5
         }
         radius: d.radius
-        // color: root.down ? d.indicatorPressed :
-        //                    root.hovered ? d.indicatorHover : "transparent"
-
-        // color: {
-        //           if (d.isIndicatorArea && mouseArea.pressed) return d.indicatorPressed
-        //           if (d.isIndicatorArea) return d.indicatorHover
-        //           return "transparent"
-        //       }
 
 
         color: {
-                if (mouseArea.pressed && d.isInIndicator) {
-                    return d.indicatorPressed // 指示器按下状态
-                } else if (d.isInIndicator) {
-                    return d.indicatorHover // 指示器悬停状态
-                } else {
-                    return "transparent" // 默认透明
-                }
+            if (mouseArea.pressed && d.isInIndicator) {
+                return d.indicatorPressed // 指示器按下状态
+            } else if (d.isInIndicator) {
+                return d.indicatorHover // 指示器悬停状态
+            } else {
+                return "transparent" // 默认透明
             }
+        }
 
-        Behavior on color { ColorAnimation { duration: 300 } }
+        Behavior on color { ColorAnimation { duration: d.animationDuration } }
 
         GaIcon {
             id: icon
@@ -149,97 +125,35 @@ T.ComboBox {
 
 
     // -------------------- 统一鼠标区域 --------------------
-      MouseArea {
-          id: mouseArea
-          anchors.fill: parent
-          hoverEnabled: true
+    MouseArea {
+        id: mouseArea
+        anchors.fill: parent
+        hoverEnabled: true
 
-          onPositionChanged: {
-              // 检测鼠标是否在指示器区域
-              var indicatorPos = mapToItem(indicator, mouseX, mouseY)
-              d.isInIndicator = indicator.contains(Qt.point(indicatorPos.x, indicatorPos.y))
-
-              // 检测鼠标是否在背景区域（且不在指示器区域）
-              d.isInBackground = containsMouse && !d.isInIndicator
-
-              // 更新光标形状
-              cursorShape = d.isInIndicator ? Qt.PointingHandCursor : Qt.ArrowCursor
-          }
-
-          onPressed: {
-              // 按下时保持当前区域状态
-              if (d.isInIndicator) {
-                  // 指示器区域按下时不处理背景状态
-              } else if (d.isInBackground) {
-                  // 背景区域按下
-              }
-          }
-
-          onReleased: {
-              if (d.isInIndicator && containsMouse) {
-                  // 点击指示器切换弹出状态
-                  popup.visible ? popup.close() : popup.open()
-              }
-          }
-
-          onExited: {
-              // 鼠标离开时重置所有状态
-              d.isInBackground = false
-              d.isInIndicator = false
-          }
-      }
-
-    // // -------------------- 优化后的事件处理 --------------------
-    // // 主背景区域
-    // MouseArea {
-    //     id: bgMouseArea
-    //     anchors.fill: parent
-    //     hoverEnabled: true
-
-    //     onEntered: root.bgHovered = true
-    //     onExited: {
-    //         root.bgHovered = false
-    //         root.bgPressed = false
-    //     }
-
-    //     function handlePress(mouse) {
-    //         root.bgPressed = true
-    //         mouse.accepted = !indicatorMouseArea.containsMouse
-    //     }
-
-    //     function handlePositionChange(mouse) {
-    //         root.indicatorActive = indicatorMouseArea.containsMouse
-    //         return false
-    //     }
-
-    //     onPressed:(mouse)=> {
-    //                   handlePress(mouse)
-    //               }
-
-
-    //     onPositionChanged :(mouse)=>{
-    //                            handlePositionChange(mouse)}
-    //     onReleased: root.bgPressed = false
-    // }
-
-    // // 指示器区域
-    // MouseArea {
-    //     id: indicatorMouseArea
-    //     width: indicator.width
-    //     height: indicator.height
-    //     anchors.right: parent.right
-    //     anchors.verticalCenter: parent.verticalCenter
-    //     anchors.rightMargin: 5
-    //     hoverEnabled: true
-    //     cursorShape: Qt.PointingHandCursor
-
-    //     onPressed: root.indicatorActive = true
-    //     onReleased: if (containsMouse) popup.visible ? popup.close() : popup.open()
-    //     onExited: root.indicatorActive = false
-    // }
+        onPositionChanged: {
+            // 检测鼠标是否在指示器区域
+            var indicatorPos = mapToItem(indicator, mouseX, mouseY)
+            d.isInIndicator = indicator.contains(Qt.point(indicatorPos.x, indicatorPos.y))
+            // 检测鼠标是否在背景区域（且不在指示器区域）
+            d.isInBackground = containsMouse && !d.isInIndicator
+            cursorShape = d.isInIndicator ? Qt.PointingHandCursor : Qt.ArrowCursor
+        }
 
 
 
+        onReleased: {
+            if (d.isInIndicator && containsMouse) {
+                // 点击指示器切换弹出状态
+                popup.visible ? popup.close() : popup.open()
+            }
+        }
+
+        onExited: {
+            // 鼠标离开时重置所有状态
+            d.isInBackground = false
+            d.isInIndicator = false
+        }
+    }
 
 
 
@@ -341,7 +255,7 @@ T.ComboBox {
         height: itemHeight
         highlighted: root.highlightedIndex === index
         hoverEnabled: true
-        //cursorShape: pressed ? Qt.PointingHandCursor : Qt.ArrowCursor
+
         background: Rectangle {
             radius: d.radius
             color: {
@@ -369,11 +283,26 @@ T.ComboBox {
                 iconSize: root.itemHeight*0.5
                 iconSource: model.icon || 0
                 anchors.verticalCenter: parent.verticalCenter
+                iconColor: {
+                    if (currentIndex === index) {
+                        return Theme.isDark ? "black" : "white"
+                    }
+                    return Theme.textColor
+                }
             }
             Text {
                 text: model.text || modelData || ""
                 font: root.font
-                color: Theme.textColor
+                color: {
+                    // 当前选中项根据主题改变文本颜色
+                    if (currentIndex === index) {
+                        return Theme.isDark ? "black" : "white"
+                    }
+                    // 非选中项使用主题默认文本颜色
+                    return Theme.textColor
+                }
+
+                // color: Theme.textColor
                 verticalAlignment: Text.AlignVCenter
                 elide: Text.ElideRight
                 anchors.verticalCenter: parent.verticalCenter

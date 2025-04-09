@@ -81,11 +81,15 @@ Item {
         id: basicCombo
 
         model: randomDataModel
-        onActivated: console.log("选中了:", currentIndex, model.get(currentIndex).text)
+        onActivated: console.log("选中了:", currentIndex, model.get(currentIndex).text,model.get(currentIndex).icon)
 
         Component.onCompleted: {
 
-        console.log(currentIndex)
+
+
+
+
+
         }
 
     }
