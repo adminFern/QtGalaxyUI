@@ -76,51 +76,18 @@ Item {
         id: basicCombo
 
         model: ListModel {
-            ListElement { text: "选项1" }
+            ListElement { text: "文档"; icon: Icons.Wifi }
             ListElement { text: "选项2" }
-            ListElement { text: "选项3" }
-            ListElement { text: "选项4" }
-             ListElement { text: "选项4" }
-              ListElement { text: "选项4" }
-               ListElement { text: "选项4" }
-                ListElement { text: "选项4" }
-                 ListElement { text: "选项4" }
-                  ListElement { text: "选项4" }
-                   ListElement { text: "选项4" }
-                    ListElement { text: "选项4" }
-                     ListElement { text: "选项4" }
-                      ListElement { text: "选项4" }
-                       ListElement { text: "选项4" }
-                        ListElement { text: "选项4" }
-                         ListElement { text: "选项4" }
-                          ListElement { text: "选项4" }
-                          ListElement { text: "选项4" }
+            ListElement { text: "选项3";icon:Icons.Bluetooth}
 
-                          ListElement { text: "选项4" }
-                          ListElement { text: "选项4" }
-                          ListElement { text: "选项4" }
-                          ListElement { text: "选项4" }
-                          ListElement { text: "选项4" }
-                          ListElement { text: "选项4" }
-                          ListElement { text: "选项4" }
-                          ListElement { text: "选项4" }
-
-                          ListElement { text: "选项4" }
-
-                           ListElement { text: "选项4" }
-                            ListElement { text: "选项4" }
-                             ListElement { text: "选项4" }
-                              ListElement { text: "选项4" }
-
-                               ListElement { text: "选项4" }
-                                ListElement { text: "选项4" }
-
-                                 ListElement { text: "选项4" }
-                                  ListElement { text: "选项4" }
-
-                                   ListElement { text: "选项4" }
         }
         onActivated: console.log("选中了:", currentIndex, model.get(currentIndex).text)
+
+        Component.onCompleted: {
+
+        console.log(currentIndex)
+        }
+
     }
 
 
