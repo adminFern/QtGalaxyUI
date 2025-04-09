@@ -20,38 +20,20 @@ T.ScrollBar{
         property int  maxLine : 6
     }
     z: horizontal? 10 : 20
-    verticalPadding : vertical ? 15 : 3
-    horizontalPadding : horizontal ? 15 : 3
-
-    background: Rectangle{
-
-        id:back_rect
-        radius: 5
-        color:"transparent"//Theme.isDark ? Qt.rgba(44/255,44/255,44/255,1) : Qt.rgba(255/255,255/255,255/255,1)
-        opacity:{
-            if(vertical){
-                return d.maxLine === Number(rect_bar.width)
-            }
-            return d.maxLine === Number(rect_bar.height)
-        }
-        Behavior on opacity {
-            NumberAnimation{
-                duration: 150
-            }
-        }
-    }
+    verticalPadding : vertical ? 13 : 3
+    horizontalPadding : horizontal ? 13 : 3
     GaIconButton{
         width: 12
         height: 12
         iconSize: 8
+
         verticalPadding: 0
         horizontalPadding: 0
         iconColor: control.color
-        opacity: back_rect.opacity
         anchors.right:parent.right
-        anchors.rightMargin: 2
+        anchors.rightMargin: 0
         anchors.verticalCenter:parent.verticalCenter
-        visible: control.horizontal
+        visible: control.horizontal && (control.hovered || control.pressed) // 修改这里
          iconSource:Icons.CaretRightSolid8
          onClicked: {
              control.increase()
@@ -64,13 +46,12 @@ T.ScrollBar{
         verticalPadding: 0
         horizontalPadding: 0
         iconColor: control.color
-        opacity: back_rect.opacity
         anchors{
             top: parent.top
-            topMargin: 2
+            topMargin: 0
             horizontalCenter: parent.horizontalCenter
         }
-        visible: control.vertical
+       visible: control.vertical && (control.hovered || control.pressed) // 修改这里
         iconSource: Icons.CaretUpSolid8
         onClicked: {
             control.decrease()
@@ -83,13 +64,12 @@ T.ScrollBar{
         verticalPadding: 0
         horizontalPadding: 0
         iconColor: control.color
-        opacity: back_rect.opacity
         anchors{
             bottom: parent.bottom
-            bottomMargin: 2
+            bottomMargin: 0
             horizontalCenter: parent.horizontalCenter
         }
-        visible: control.vertical
+          visible: control.vertical && (control.hovered || control.pressed) // 修改这里
         iconSource: Icons.CaretDownSolid8
         onClicked: {
             control.increase()

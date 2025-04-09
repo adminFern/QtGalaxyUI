@@ -8,6 +8,11 @@ Item {
     ListModel {
         id: randomDataModel
     }
+    Component.onCompleted: {
+        generateRandomData()
+    }
+
+
     // 生成数据的函数
     function generateRandomData() {
         // 清空现有数据
@@ -44,7 +49,7 @@ Item {
         const icons = [Icons.Wifi, Icons.Connect, Icons.Cloud, Icons.Settings, Icons.Home,Icons.EMI,Icons.VPN,Icons.Phone, 0]; // 0 表示无图标
 
         // 生成 10,000 条数据
-        for (let i = 0; i < 3; i++) {
+        for (let i = 0; i < 2353; i++) {
             // 随机选择数据源（0: 日常用语, 1: 全球公司, 2: 中国公司）
             const dataSource = Math.floor(Math.random() * 3);
             let text;
@@ -75,12 +80,7 @@ Item {
         y:10
         id: basicCombo
 
-        model: ListModel {
-            ListElement { text: "文档"; icon: Icons.Wifi }
-            ListElement { text: "选项2" }
-            ListElement { text: "选项3";icon:Icons.Bluetooth}
-
-        }
+        model: randomDataModel
         onActivated: console.log("选中了:", currentIndex, model.get(currentIndex).text)
 
         Component.onCompleted: {

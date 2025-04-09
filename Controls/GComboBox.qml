@@ -12,7 +12,7 @@ T.ComboBox {
     implicitHeight: 40
 
     // -------------------- 样式属性 --------------------
-    property int itemHeight: 32
+    property int itemHeight: 36
     property int visibleItemCount: 6
     property color itemSelectedColor: "#004080"
     property color itemHoverColor: "#ADD8E6"
@@ -69,11 +69,11 @@ T.ComboBox {
 
     // -------------------- 内容项 --------------------
     contentItem: Row {
+        leftPadding: 5
         spacing: 4
-
         GaIcon {
-           visible: currentIndex >= 0 ? (model.get(currentIndex).icon ? true : false) : false
-            iconSize: 16
+            visible: currentIndex >= 0 ? (model.get(currentIndex).icon ? true : false) : false
+            iconSize: root.height*0.5
             iconSource: currentIndex < 0 ? 0 : (model.get(currentIndex).icon || 0)
             anchors.verticalCenter: parent.verticalCenter
         }
@@ -90,18 +90,21 @@ T.ComboBox {
 
     // -------------------- 下拉菜单 --------------------
     popup: T.Popup {
-        y: root.height + 1
+        y: root.height + 2
         width: root.width
         height: d.dropDownHeight
         padding: 4
-
         contentItem: ListView {
             clip: true
             spacing: 1
             implicitHeight: contentHeight
             model: root.delegateModel
             currentIndex: root.highlightedIndex
-            ScrollBar.vertical: GaScrollBar {visible: root.count > root.visibleItemCount }
+            ScrollBar.vertical: GaScrollBar {
+                visible: root.count > root.visibleItemCount
+                anchors.right: parent.right
+            }
+
         }
 
         background: Shadow {
@@ -110,7 +113,7 @@ T.ComboBox {
                 anchors.fill: parent
                 radius: d.radius
                 color: Theme.itemNormalColor
-                border.color: Theme.borderNormalColor
+                border.color: Theme.textColor
                 border.width: 1
             }
         }
@@ -122,12 +125,19 @@ T.ComboBox {
         height: itemHeight
         highlighted: root.highlightedIndex === index
         hoverEnabled: true
-
         background: Rectangle {
-            radius: 4
-            color: highlighted ? itemSelectedColor :
-                                 pressed ? itemPressedColor :
-                                           hovered ? itemHoverColor : "transparent"
+            radius: d.radius
+            color: {
+                if (currentIndex === index) return "cornflowerblue"
+                if (pressed) return "darkorange"
+                if(hovered) return "blueviolet"
+                return "transparent"
+            }
+
+
+            // highlighted ? itemSelectedColor :
+            //                  pressed ? itemPressedColor :
+            //                            hovered ? itemHoverColor : "transparent"
         }
 
         contentItem: Row {
@@ -135,7 +145,7 @@ T.ComboBox {
 
             GaIcon {
                 visible: model.icon !== undefined
-                iconSize: 16
+                iconSize: root.itemHeight*0.5
                 iconSource: model.icon || 0
                 anchors.verticalCenter: parent.verticalCenter
             }
