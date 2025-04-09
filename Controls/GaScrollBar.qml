@@ -23,10 +23,11 @@ T.ScrollBar{
     verticalPadding : vertical ? 13 : 3
     horizontalPadding : horizontal ? 13 : 3
     GaIconButton{
+      // cursorShape: Qt.PointingHandCursor // 添加手指指针
+        id:button1
         width: 12
         height: 12
         iconSize: 8
-
         verticalPadding: 0
         horizontalPadding: 0
         iconColor: control.color
@@ -38,8 +39,11 @@ T.ScrollBar{
          onClicked: {
              control.increase()
          }
+
+
     }
     GaIconButton{
+        id:button2
         width: 12
         height: 12
         iconSize: 8
@@ -56,8 +60,11 @@ T.ScrollBar{
         onClicked: {
             control.decrease()
         }
+
+
     }
     GaIconButton{
+        id:button3
         width: 12
         height: 12
         iconSize: 8
@@ -74,6 +81,8 @@ T.ScrollBar{
         onClicked: {
             control.increase()
         }
+
+
     }
 
     contentItem: Item {
@@ -96,6 +105,9 @@ T.ScrollBar{
             }
             radius: width / 2
             visible: control.size < 1.0
+
+
+
         }
         states: [
             State{
