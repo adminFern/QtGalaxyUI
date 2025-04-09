@@ -48,7 +48,7 @@ Button{
     verticalPadding: 1
     horizontalPadding: 1
     enabled: !disabled
-    font:QTextFont.body
+    font:TextFont.body
 
     background: Rectangle{
         implicitWidth: 30
@@ -72,11 +72,11 @@ Button{
     //图标
     Component{
         id:com_icon
-        QIcon {
+        GaIcon {
             id:text_icon
             iconSize: control.iconSize
-            icocolor: control.iconColor
-            icosource: control.iconSource
+            iconColor:  control.iconColor
+            iconSource: control.iconSource
         }
     }
     //文本
