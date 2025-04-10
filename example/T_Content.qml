@@ -74,63 +74,50 @@ Item {
     }
 
 
-    GaComboBox {
+    Connections {
 
-        x:10
-        y:10
-        id: basicCombo
-        height: 40
-        model: randomDataModel
-
-
-        displayText: "请选择一个选项"
+        target:basicCombo.model
+        function onRowsInserted(first, last) {
+            console.log(`外部监听到新增: 第${first}到${last}项`)
+        }
+        function onRowsRemoved(first, last) {
+            console.log(`外部监听到删除: 第${first}到${last}项`)
+        }
 
     }
 
-    //     R
 
-    //ow{
-    //         leftPadding: 5
-    //         spacing: 3
-    //         GaIconButton{
-    //             iconSource: Icons.Bluetooth
-    //         }
-    //         GaIconButton{
-    //             iconSource: Icons.More
-    //         }
-    //         GaIconButton{
-    //             display: Button.TextBesideIcon
-    //             iconSource: Icons.Video
-    //             text: "深色模式"
-    //             onClicked: {
-    //                 Theme.themeType=Theme.ModeType.Dark
-    //             }
-    //         }
-    //         GaIconButton{
-    //             display: Button.TextBesideIcon
-    //             iconSource: Icons.Zoom
-    //             text: "浅色模式"
-    //             onClicked: {
-    //                 Theme.themeType=Theme.ModeType.Light
-    //             }
-    //         }
 
-    //     }
-    //         GaIconButton{
-    //             display: Button.TextBesideIcon
-    //             iconSource: Icons.ZoomOut
-    //             text: "添加ComboBox数据"
-    //             onClicked: {
-    //                 mboBox.clearAll()
-    //                 randomDataModel.clear()
-    //                 generateRandomData()
-    //             }
-    //         }
-    //         GaButton{
-    //         text: "尺寸测试"
-    //         iconSource: Icons.ZoomOut
 
-    //         }
-    //     }
-    // }
+    Row{
+        padding: 5
+        spacing: 5
+
+
+        GaComboBox {
+            id: basicCombo
+            height: 42
+            width: 160
+            model: randomDataModel
+            displayText: "请选择一个选项"
+            onHighlighted:(index) =>{
+
+                              console.log(index)
+                          }
+
+
+
+
+        }
+        Button{
+
+            text: "习惯"
+            onClicked: {
+
+                //basicCombo.prependItem({text: "中国一点涛涛涛涛", icon: Icons.Pin})
+                randomDataModel.insert(0,{text: "中国一点涛涛涛涛", icon: Icons.Pin})
+            }
+        }
+    }
+
 }

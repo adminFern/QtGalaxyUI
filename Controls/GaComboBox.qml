@@ -7,12 +7,18 @@ import GalaxyUI
 
 T.ComboBox {
    id: root
-   // -------------------- 基础属性 --------------------
-   implicitWidth: 180
-   implicitHeight: itemHeight
+   implicitWidth: Math.max(implicitBackgroundWidth + leftInset + rightInset,
+                           implicitContentWidth + leftPadding + rightPadding)
+   implicitHeight: Math.max(implicitBackgroundHeight + topInset + bottomInset,
+                            implicitContentHeight + topPadding + bottomPadding)
+
    // -------------------- 样式属性 --------------------
    property int itemHeight: 32
    property int visibleItemCount:6
+
+
+
+
 
    //颜色
    property color itemSelectedColor: "#004080"
@@ -65,7 +71,7 @@ T.ComboBox {
       layer.enabled: true
       layer.effect: DropShadow {
          radius: 8
-         samples: 20
+         samples: 12
          color:{
           if (d.isInBackground || d.isInIndicator) return  Theme.itemfocuscolor
            return  Theme.isDark?Qt.rgba(1,1,1,0.6) : Qt.rgba(0,0,0,0.6)
@@ -73,12 +79,6 @@ T.ComboBox {
       }
       Behavior on color { ColorAnimation { duration: 300 } }
    }
-
-
-
-
-
-
    // -------------------- 下拉指示器 --------------------
    indicator: Rectangle {
       implicitWidth: root.height - 8
@@ -89,8 +89,6 @@ T.ComboBox {
          rightMargin: 5
       }
       radius: d.radius
-
-
       color: {
          if (mouseArea.pressed && d.isInIndicator) {
             return d.indicatorPressed // 指示器按下状态
@@ -100,9 +98,7 @@ T.ComboBox {
             return "transparent" // 默认透明
          }
       }
-
       Behavior on color { ColorAnimation { duration: 300 } }
-
       GaIcon {
          id: icon
          anchors.centerIn: parent
@@ -136,11 +132,14 @@ T.ComboBox {
          // 检测鼠标是否在背景区域（且不在指示器区域）
          d.isInBackground = containsMouse && !d.isInIndicator
          cursorShape = d.isInIndicator ? Qt.PointingHandCursor : Qt.ArrowCursor
+
+
       }
       onReleased: {
          if (d.isInIndicator && containsMouse) {
             // 点击指示器切换弹出状态
-            popup.visible ? popup.close() : popup.open()
+         popup.visible ? popup.close() : popup.open()
+       // popup.open()
          }
       }
       onExited: {
@@ -163,7 +162,7 @@ T.ComboBox {
       }
 
       Text {
-         text: currentIndex>= 0 && count!==0 ?model.get(currentIndex).text: displayText
+         text: currentIndex>= 0 && count!==0 ?model.get(currentIndex).text: ""
          font: root.font
          color: Theme.textColor
          verticalAlignment: Text.AlignVCenter
@@ -261,13 +260,13 @@ T.ComboBox {
             if(hovered) return itemPressedColor
             return "transparent"
          }
-         // 背景色变化动画
-         Behavior on color {
-            ColorAnimation {
-               duration: 350
-               easing.type: Easing.OutQuad
-            }
-         }
+         // // 背景色变化动画
+         // Behavior on color {
+         //    ColorAnimation {
+         //       duration: 350
+         //       easing.type: Easing.OutQuad
+         //    }
+         // }
 
       }
       contentItem: Row {
@@ -294,4 +293,5 @@ T.ComboBox {
          }
       }
    }
+
 }
