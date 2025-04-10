@@ -74,29 +74,30 @@ Item {
     }
 
 
-    GComboBox {
+    GaComboBox {
 
         x:10
         y:10
         id: basicCombo
 
         model: randomDataModel
-        onActivated: console.log("选中了:", currentIndex, model.get(currentIndex).text,model.get(currentIndex).icon)
-
-        Component.onCompleted: {
-
-
+        onActivated:{
+            //console.log("选中了:", currentIndex, model.get(currentIndex).text,model.get(currentIndex).icon)
 
 
 
 
         }
+        Component.onCompleted: {
+            console.log("初始选中:", currentText) // 输出第一个选项的文本
+        }
+       displayText: "请选择一个选项"
 
     }
 
+//     R
 
-
-//     Row{
+//ow{
 //         leftPadding: 5
 //         spacing: 3
 //         GaIconButton{
