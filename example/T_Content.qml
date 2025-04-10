@@ -49,7 +49,7 @@ Item {
         const icons = [Icons.Wifi, Icons.Connect, Icons.Cloud, Icons.Settings, Icons.Home,Icons.EMI,Icons.VPN,Icons.Phone, 0]; // 0 表示无图标
 
         // 生成 10,000 条数据
-        for (let i = 0; i < 2353; i++) {
+        for (let i = 0; i < 22; i++) {
             // 随机选择数据源（0: 日常用语, 1: 全球公司, 2: 中国公司）
             const dataSource = Math.floor(Math.random() * 3);
             let text;
@@ -63,7 +63,7 @@ Item {
             }
 
             // 确保文本长度为 7 字符（不足补空格）
-            text = text.padEnd(7, " ").substring(0, 7);
+            text = text.padEnd(18, " ").substring(0, 7);
 
             // 随机选择图标
             const icon = icons[Math.floor(Math.random() * icons.length)];
@@ -79,66 +79,58 @@ Item {
         x:10
         y:10
         id: basicCombo
-
+        height: 40
         model: randomDataModel
-        onActivated:{
-            //console.log("选中了:", currentIndex, model.get(currentIndex).text,model.get(currentIndex).icon)
 
 
-
-
-        }
-        Component.onCompleted: {
-            console.log("初始选中:", currentText) // 输出第一个选项的文本
-        }
-       displayText: "请选择一个选项"
+        displayText: "请选择一个选项"
 
     }
 
-//     R
+    //     R
 
-//ow{
-//         leftPadding: 5
-//         spacing: 3
-//         GaIconButton{
-//             iconSource: Icons.Bluetooth
-//         }
-//         GaIconButton{
-//             iconSource: Icons.More
-//         }
-//         GaIconButton{
-//             display: Button.TextBesideIcon
-//             iconSource: Icons.Video
-//             text: "深色模式"
-//             onClicked: {
-//                 Theme.themeType=Theme.ModeType.Dark
-//             }
-//         }
-//         GaIconButton{
-//             display: Button.TextBesideIcon
-//             iconSource: Icons.Zoom
-//             text: "浅色模式"
-//             onClicked: {
-//                 Theme.themeType=Theme.ModeType.Light
-//             }
-//         }
+    //ow{
+    //         leftPadding: 5
+    //         spacing: 3
+    //         GaIconButton{
+    //             iconSource: Icons.Bluetooth
+    //         }
+    //         GaIconButton{
+    //             iconSource: Icons.More
+    //         }
+    //         GaIconButton{
+    //             display: Button.TextBesideIcon
+    //             iconSource: Icons.Video
+    //             text: "深色模式"
+    //             onClicked: {
+    //                 Theme.themeType=Theme.ModeType.Dark
+    //             }
+    //         }
+    //         GaIconButton{
+    //             display: Button.TextBesideIcon
+    //             iconSource: Icons.Zoom
+    //             text: "浅色模式"
+    //             onClicked: {
+    //                 Theme.themeType=Theme.ModeType.Light
+    //             }
+    //         }
 
-//     }
-//         GaIconButton{
-//             display: Button.TextBesideIcon
-//             iconSource: Icons.ZoomOut
-//             text: "添加ComboBox数据"
-//             onClicked: {
-//                 mboBox.clearAll()
-//                 randomDataModel.clear()
-//                 generateRandomData()
-//             }
-//         }
-//         GaButton{
-//         text: "尺寸测试"
-//         iconSource: Icons.ZoomOut
+    //     }
+    //         GaIconButton{
+    //             display: Button.TextBesideIcon
+    //             iconSource: Icons.ZoomOut
+    //             text: "添加ComboBox数据"
+    //             onClicked: {
+    //                 mboBox.clearAll()
+    //                 randomDataModel.clear()
+    //                 generateRandomData()
+    //             }
+    //         }
+    //         GaButton{
+    //         text: "尺寸测试"
+    //         iconSource: Icons.ZoomOut
 
-//         }
-//     }
-// }
+    //         }
+    //     }
+    // }
 }

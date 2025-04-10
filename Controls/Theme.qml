@@ -28,11 +28,13 @@ QtObject  {
 
     property color itemHoverColor: isDark? Qt.rgba(1, 1, 1, 0.05):Qt.rgba(0, 0, 0, 0.05)
 
-    property color itemNormalColor: isDark? Qt.rgba(1, 1, 1, 0.03):Qt.rgba(0, 0, 0, 0.03)
+    property color itemBackgroundColor: isDark? Qt.rgba(1, 1, 1, 0.01):Qt.rgba(0, 0, 0, 0.01)
 
+
+      property color itemfocuscolor: isDark? Qt.darker("#E66495ED",1.1):"#E66495ED"
 
     //边框颜色
-     property color borderNormalColor: isDark?  Qt.rgba(1, 1, 1, 0.13):Qt.rgba(0, 0, 0, 0.13)
+     property color borderNormalColor: isDark?  Qt.rgba(1, 1, 1, 0.15):Qt.rgba(0, 0, 0, 0.15)
      property color borderHoverlColor: isDark?  Qt.rgba(1, 1, 1, 0.2):Qt.rgba(0, 0, 0, 0.2)
      property color borderPresslColor: isDark? Qt.rgba(1, 1, 1, 0.3):Qt.rgba(0, 0, 0, 0.3)
     //文本颜色

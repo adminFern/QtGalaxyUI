@@ -25,10 +25,6 @@ Button{
 
 
     property color color: {
-
-
-
-
         if(!enabled){
             return Theme.itemDisabledColor //禁止
         }
