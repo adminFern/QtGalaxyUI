@@ -26,7 +26,8 @@ set(RES_PATHS
    favicon.ico
    Controls/Font/FluentIcons.ttf
    Controls/qmldir
-  # rcs.qrc
+  # logo.png
+   rsc.qrc
 
 )
 #资源文件

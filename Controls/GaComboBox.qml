@@ -1,5 +1,5 @@
 import QtQuick
-import QtQuick.Controls
+
 import QtQuick.Templates as T
 import QtQuick.Controls.Basic
 import Qt5Compat.GraphicalEffects

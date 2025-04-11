@@ -87,9 +87,30 @@ Item {
 
             text: "添加"
             onClicked: {
-                randomDataModel.insert(0,{text: "中国一点涛涛涛涛", icon: Icons.Pin})
+                randomDataModel.insert(0,{text: "中国一点涛涛涛涛", icon: Icons.Bluetooth})
             }
         }
+
+        Icon{
+
+            iconSource: Icons.Bluetooth
+            iconSize: 26
+        }
+        // Image {
+
+        //     id: name
+        //     source:  "qrc:/logo.png"
+
+
+        // }
+
+        Icon {
+            iconSize: 100
+            iconSource:  "qrc:/logo.png"
+
+
+        }
+
     }
 
 }
