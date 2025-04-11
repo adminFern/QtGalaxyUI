@@ -49,7 +49,7 @@ Item {
         const icons = [Icons.Wifi, Icons.Connect, Icons.Cloud, Icons.Settings, Icons.Home,Icons.EMI,Icons.VPN,Icons.Phone, 0]; // 0 表示无图标
 
         // 生成 10,000 条数据
-        for (let i = 0; i < 22; i++) {
+        for (let i = 0; i < 232; i++) {
             // 随机选择数据源（0: 日常用语, 1: 全球公司, 2: 中国公司）
             const dataSource = Math.floor(Math.random() * 3);
             let text;
@@ -63,7 +63,7 @@ Item {
             }
 
             // 确保文本长度为 7 字符（不足补空格）
-            text = text.padEnd(18, " ").substring(0, 7);
+            text = text.padEnd(18).substring(0, 7);
 
             // 随机选择图标
             const icon = icons[Math.floor(Math.random() * icons.length)];
@@ -77,7 +77,6 @@ Item {
         padding: 5
         spacing: 5
         GaComboBox {
-
             id: basicCombo
             height: 42
             width: 160
@@ -86,10 +85,8 @@ Item {
         }
         Button{
 
-            text: "习惯"
+            text: "添加"
             onClicked: {
-
-                //basicCombo.prependItem({text: "中国一点涛涛涛涛", icon: Icons.Pin})
                 randomDataModel.insert(0,{text: "中国一点涛涛涛涛", icon: Icons.Pin})
             }
         }

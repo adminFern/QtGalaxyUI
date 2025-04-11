@@ -15,11 +15,7 @@ T.ComboBox {
    // -------------------- 样式属性 --------------------
    property int itemHeight: 32
    property int visibleItemCount:6
-
-
    property bool isEditing: false
-
-
    //颜色
    property color itemSelectedColor: "#004080"
    property color itemHoverColor: "#ADD8E6"
@@ -28,39 +24,39 @@ T.ComboBox {
 
    // 在根组件添加 currentIndex 变化监听
    onCurrentIndexChanged: {
-       if (!d.isEditingMode && currentIndex >= 0 && count > 0) {
-           displayText.text = model.get(currentIndex).text
-       }
+      if (!d.isEditingMode && currentIndex >= 0 && count > 0) {
+         displayText.text = model.get(currentIndex).text
+      }
    }
    // 将函数定义移到组件根作用域（放在最后）：
    // -------------------- 编辑模式控制函数 --------------------
    function enterEditMode() {
-       if (!root.isEditing || currentIndex < 0) return
+      if (!root.isEditing || currentIndex < 0) return
 
-       d.isEditingMode = true
-       textInput.text = displayText.text
-       textInput.visible = true
-       textInput.forceActiveFocus()
-       textInput.selectAll()
-       displayText.visible = false
+      d.isEditingMode = true
+      textInput.text = displayText.text
+      textInput.visible = true
+      textInput.forceActiveFocus()
+      // textInput.selectAll()
+      displayText.visible = false
    }
 
    function exitEditMode(saveChanges) {
-       if (!d.isEditingMode) return
+      if (!d.isEditingMode) return
 
-       if (saveChanges && currentIndex >= 0 && root.count > 0) {
-           if (model.get(currentIndex).text !== undefined) {
-               model.setProperty(currentIndex, "text", textInput.text)
-           }
-           displayText.text = textInput.text
-       } else {
-          // 取消编辑时恢复原文本
-          displayText.text = model.get(currentIndex).text
+      if (saveChanges && currentIndex >= 0 && root.count > 0) {
+         if (model.get(currentIndex).text !== undefined) {
+            model.setProperty(currentIndex, "text", textInput.text)
+         }
+         displayText.text = textInput.text
+      } else {
+         // 取消编辑时恢复原文本
+         displayText.text = model.get(currentIndex).text
       }
 
-       textInput.visible = false
-       displayText.visible = true
-       d.isEditingMode = false
+      textInput.visible = false
+      displayText.visible = true
+      d.isEditingMode = false
    }
 
    // -------------------- 私有属性 --------------------
@@ -202,46 +198,48 @@ T.ComboBox {
       }
 
       // 正常显示的文本
-        Text {
-            id: displayText
-            text: currentIndex >= 0 && count !== 0 ? model.get(currentIndex).text : ""
-            font: root.font
-            color: Theme.textColor
-            verticalAlignment: Text.AlignVCenter
-            elide: Text.ElideRight
-            anchors.verticalCenter: parent.verticalCenter
-            visible: !textInput.visible  // 编辑时隐藏
-            width: parent.width
-                         - (icon.width + spacing)
-                         - (indicatorRec.width + indicatorRec.anchors.rightMargin)-14
+      Text {
+         id: displayText
+         text: currentIndex >= 0 && count !== 0 ? model.get(currentIndex).text : ""
+         font: root.font
+         color: Theme.textColor
+         verticalAlignment: Text.AlignVCenter
+         elide: Text.ElideRight
+         anchors.verticalCenter: parent.verticalCenter
+         visible: !textInput.visible  // 编辑时隐藏
+         width: parent.width
+                - (icon.width + spacing)
+                - (indicatorRec.width + indicatorRec.anchors.rightMargin)-14
 
-        }
+      }
 
-        // 编辑时显示的输入框
-               TextInput {
-                  clip: true
-                   id: textInput
-                   text: displayText.text  // 初始化为当前显示文本
-                   font: root.font
-                   verticalAlignment: Text.AlignVCenter
-                   anchors.verticalCenter: parent.verticalCenter
+      // 编辑时显示的输入框
+      TextInput {
+         clip: true
+         id: textInput
+         text: displayText.text  // 初始化为当前显示文本
+         font: root.font
+         verticalAlignment: Text.AlignVCenter
+         anchors.verticalCenter: parent.verticalCenter
+         selectionColor: "transparent"
+         selectedTextColor: Theme.textColor
+         color: Theme.textColor
+         width:displayText.width//parent.width-icon.width + parent.spacing+icon.padding
+         ///selectByMouse: true  // 允许鼠标选择文本
 
-                   width:displayText.width//parent.width-icon.width + parent.spacing+icon.padding
-                   selectByMouse: true  // 允许鼠标选择文本
+         // 按回车键保存并退出编辑
+         Keys.onReturnPressed: exitEditMode(true)
+         Keys.onEnterPressed: exitEditMode(true)
+         // 按ESC键取消编辑
+         Keys.onEscapePressed: exitEditMode(false)
 
-                   // 按回车键保存并退出编辑
-                   Keys.onReturnPressed: exitEditMode(true)
-                   Keys.onEnterPressed: exitEditMode(true)
-                   // 按ESC键取消编辑
-                   Keys.onEscapePressed: exitEditMode(false)
-
-                   // 失去焦点时自动保存
-                   onActiveFocusChanged: {
-                       if (!activeFocus && visible) {
-                           exitEditMode(true)
-                       }
-                   }
-               }
+         // 失去焦点时自动保存
+         onActiveFocusChanged: {
+            if (!activeFocus && visible) {
+               exitEditMode(true)
+            }
+         }
+      }
 
    }
    // -------------------- 下拉菜单 --------------------
@@ -322,6 +320,7 @@ T.ComboBox {
       height: itemHeight
       highlighted: root.highlightedIndex === index
       hoverEnabled: true
+      padding: 0
       background: Rectangle {
          radius: d.radius
          color: {
@@ -333,26 +332,36 @@ T.ComboBox {
       }
       contentItem: Row {
          spacing: 3
-         GaIcon {
-            id:daicon
-            visible: model.icon !== undefined
-            iconSize: root.itemHeight*0.5
-            iconSource: model.icon || 0
-            anchors.verticalCenter: parent.verticalCenter
-            iconColor: {
-               if (currentIndex === index) {
-                  return Theme.isDark ? "black" : "white"
-               }
-               return Theme.textColor
-            }
+         padding: 2
+         AutoLoader{
+            id: iconLoader
+               active: model.icon !== undefined
+               visible: active
+               width: active ? root.itemHeight*0.5 : 0
+               height: width
+               anchors.verticalCenter: parent.verticalCenter
+               sourceComponent: GaIcon {
+                     iconSize: root.itemHeight*0.5
+                     iconSource: model.icon
+                     iconColor: {
+                         if (currentIndex === index) {
+                             return Theme.isDark ? "black" : "white"
+                         }
+                         return Theme.textColor
+                     }
+                 }
          }
+
+
+
          Text {
             text: model.text || modelData || ""
             font: root.font
             color: currentIndex === index ? (Theme.isDark ? "black" : "white") : Theme.textColor
             verticalAlignment: Text.AlignVCenter
+            horizontalAlignment: Text.AlignLeft    // 左对齐（默认）
             elide: Text.ElideRight
-            width: parent.width-daicon.width-daicon.padding
+            width: parent.width
             anchors.verticalCenter: parent.verticalCenter
          }
       }
