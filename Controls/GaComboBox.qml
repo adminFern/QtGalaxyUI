@@ -17,7 +17,7 @@ T.ComboBox {
    property int visibleItemCount:6
 
 
-
+   property bool isEditing: false
 
 
    //颜色
@@ -25,6 +25,43 @@ T.ComboBox {
    property color itemHoverColor: "#ADD8E6"
    property color itemPressedColor: "#4682B4"
 
+
+   // 在根组件添加 currentIndex 变化监听
+   onCurrentIndexChanged: {
+       if (!d.isEditingMode && currentIndex >= 0 && count > 0) {
+           displayText.text = model.get(currentIndex).text
+       }
+   }
+   // 将函数定义移到组件根作用域（放在最后）：
+   // -------------------- 编辑模式控制函数 --------------------
+   function enterEditMode() {
+       if (!root.isEditing || currentIndex < 0) return
+
+       d.isEditingMode = true
+       textInput.text = displayText.text
+       textInput.visible = true
+       textInput.forceActiveFocus()
+       textInput.selectAll()
+       displayText.visible = false
+   }
+
+   function exitEditMode(saveChanges) {
+       if (!d.isEditingMode) return
+
+       if (saveChanges && currentIndex >= 0 && root.count > 0) {
+           if (model.get(currentIndex).text !== undefined) {
+               model.setProperty(currentIndex, "text", textInput.text)
+           }
+           displayText.text = textInput.text
+       } else {
+          // 取消编辑时恢复原文本
+          displayText.text = model.get(currentIndex).text
+      }
+
+       textInput.visible = false
+       displayText.visible = true
+       d.isEditingMode = false
+   }
 
    // -------------------- 私有属性 --------------------
    QtObject {
@@ -37,11 +74,8 @@ T.ComboBox {
       // 鼠标位置状态
       property bool isInBackground: false//是否处于后面
       property bool isInIndicator: false //是否在指示器中
+      property bool isEditingMode: false   // 当前是否处于编辑模式（内部状态）
    }
-
-
-
-
 
    // -------------------- 背景样式 --------------------
    background: Rectangle {
@@ -73,14 +107,15 @@ T.ComboBox {
          radius: 8
          samples: 12
          color:{
-          if (d.isInBackground || d.isInIndicator) return  Theme.itemfocuscolor
-           return  Theme.isDark?Qt.rgba(1,1,1,0.6) : Qt.rgba(0,0,0,0.6)
+            if (d.isInBackground || d.isInIndicator) return  Theme.itemfocuscolor
+            return  Theme.isDark?Qt.rgba(1,1,1,0.6) : Qt.rgba(0,0,0,0.6)
          }
       }
       Behavior on color { ColorAnimation { duration: 300 } }
    }
    // -------------------- 下拉指示器 --------------------
    indicator: Rectangle {
+      id:indicatorRec
       implicitWidth: root.height - 8
       implicitHeight: root.height - 8
       anchors {
@@ -117,8 +152,6 @@ T.ComboBox {
       }
 
    }
-
-
    // -------------------- 统一鼠标区域 --------------------
    MouseArea {
       id: mouseArea
@@ -136,10 +169,9 @@ T.ComboBox {
 
       }
       onReleased: {
-         if (d.isInIndicator && containsMouse) {
-            // 点击指示器切换弹出状态
-         popup.visible ? popup.close() : popup.open()
-       // popup.open()
+         // 编辑模式下禁止点击指示器打开下拉框
+         if (d.isInIndicator && containsMouse && !d.isEditingMode) {
+            popup.visible ? popup.close() : popup.open()
          }
       }
       onExited: {
@@ -147,8 +179,16 @@ T.ComboBox {
          d.isInBackground = false
          d.isInIndicator = false
       }
-   }
+      onDoubleClicked: {
 
+
+         // 仅在允许编辑且双击背景区域时进入编辑模式
+         if (root.isEditing && d.isInBackground && !d.isEditingMode) {
+            enterEditMode()
+         }
+
+      }
+   }
 
    // -------------------- 内容项 --------------------
    contentItem: Row {
@@ -161,16 +201,49 @@ T.ComboBox {
          anchors.verticalCenter: parent.verticalCenter
       }
 
-      Text {
-         text: currentIndex>= 0 && count!==0 ?model.get(currentIndex).text: ""
-         font: root.font
-         color: Theme.textColor
-         verticalAlignment: Text.AlignVCenter
-         elide: Text.ElideRight
-         anchors.verticalCenter: parent.verticalCenter
-      }
-   }
+      // 正常显示的文本
+        Text {
+            id: displayText
+            text: currentIndex >= 0 && count !== 0 ? model.get(currentIndex).text : ""
+            font: root.font
+            color: Theme.textColor
+            verticalAlignment: Text.AlignVCenter
+            elide: Text.ElideRight
+            anchors.verticalCenter: parent.verticalCenter
+            visible: !textInput.visible  // 编辑时隐藏
+            width: parent.width
+                         - (icon.width + spacing)
+                         - (indicatorRec.width + indicatorRec.anchors.rightMargin)-14
 
+        }
+
+        // 编辑时显示的输入框
+               TextInput {
+                  clip: true
+                   id: textInput
+                   text: displayText.text  // 初始化为当前显示文本
+                   font: root.font
+                   verticalAlignment: Text.AlignVCenter
+                   anchors.verticalCenter: parent.verticalCenter
+
+                   width:displayText.width//parent.width-icon.width + parent.spacing+icon.padding
+                   selectByMouse: true  // 允许鼠标选择文本
+
+                   // 按回车键保存并退出编辑
+                   Keys.onReturnPressed: exitEditMode(true)
+                   Keys.onEnterPressed: exitEditMode(true)
+                   // 按ESC键取消编辑
+                   Keys.onEscapePressed: exitEditMode(false)
+
+                   // 失去焦点时自动保存
+                   onActiveFocusChanged: {
+                       if (!activeFocus && visible) {
+                           exitEditMode(true)
+                       }
+                   }
+               }
+
+   }
    // -------------------- 下拉菜单 --------------------
    popup: T.Popup {
 
@@ -179,8 +252,6 @@ T.ComboBox {
       width: root.width
       height: d.dropDownHeight
       padding: 4
-
-
       // 弹出动画
       enter: Transition {
          NumberAnimation {
@@ -243,7 +314,6 @@ T.ComboBox {
          }
 
       }
-
    }
 
    // -------------------- 选项代理 --------------------
@@ -260,14 +330,6 @@ T.ComboBox {
             if(hovered) return itemPressedColor
             return "transparent"
          }
-         // // 背景色变化动画
-         // Behavior on color {
-         //    ColorAnimation {
-         //       duration: 350
-         //       easing.type: Easing.OutQuad
-         //    }
-         // }
-
       }
       contentItem: Row {
          spacing: 3

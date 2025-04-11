@@ -74,17 +74,7 @@ Item {
     }
 
 
-    Connections {
 
-        target:basicCombo.model
-        function onRowsInserted(first, last) {
-            console.log(`外部监听到新增: 第${first}到${last}项`)
-        }
-        function onRowsRemoved(first, last) {
-            console.log(`外部监听到删除: 第${first}到${last}项`)
-        }
-
-    }
 
 
 
@@ -95,15 +85,12 @@ Item {
 
 
         GaComboBox {
+
             id: basicCombo
             height: 42
             width: 160
             model: randomDataModel
-            displayText: "请选择一个选项"
-            onHighlighted:(index) =>{
 
-                              console.log(index)
-                          }
 
 
 
