@@ -73,28 +73,16 @@ Item {
         }
     }
 
-
-
-
-
-
-
     Row{
         padding: 5
         spacing: 5
-
-
         GaComboBox {
 
             id: basicCombo
             height: 42
             width: 160
             model: randomDataModel
-
-
-
-
-
+            isEditing: true
         }
         Button{
 

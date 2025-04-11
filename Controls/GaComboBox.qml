@@ -144,7 +144,7 @@ T.ComboBox {
             origin.x: icon.width / 2
             origin.y: icon.height / 2
             axis { x: 0; y: 0; z: 1 }
-            angle: popup.visible ? 180 : 0  // 根据弹出状态旋转180度
+            angle: popup.visible && count >0? 180 : 0  // 根据弹出状态旋转180度
             Behavior on angle {  // 平滑的旋转动画
                NumberAnimation { duration: 300; easing.type: Easing.OutCubic }
             }
@@ -334,6 +334,7 @@ T.ComboBox {
       contentItem: Row {
          spacing: 3
          GaIcon {
+            id:daicon
             visible: model.icon !== undefined
             iconSize: root.itemHeight*0.5
             iconSource: model.icon || 0
@@ -351,6 +352,7 @@ T.ComboBox {
             color: currentIndex === index ? (Theme.isDark ? "black" : "white") : Theme.textColor
             verticalAlignment: Text.AlignVCenter
             elide: Text.ElideRight
+            width: parent.width-daicon.width-daicon.padding
             anchors.verticalCenter: parent.verticalCenter
          }
       }
